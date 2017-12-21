@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.Theme;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,7 +29,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.provider.MediaStore;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
@@ -103,7 +101,6 @@ import com.youkes.browser.database.BookmarkManager;
 import com.youkes.browser.database.HistoryDatabase;
 import com.youkes.browser.database.HistoryItem;
 import com.youkes.browser.dialog.ECListDialog;
-
 import com.youkes.browser.object.ClickHandler;
 import com.youkes.browser.object.DrawerArrowDrawable;
 import com.youkes.browser.object.SearchAdapter;
@@ -143,6 +140,43 @@ import java.util.Locale;
 
 public class BrowserActivity extends ThemableActivity implements BrowserController, OnClickListener,ViewTreeObserver.OnScrollChangedListener {
 
+	public static final int Open_Browser_Input = 3;
+	// Constant
+	private static final int API = android.os.Build.VERSION.SDK_INT;
+	private static final LayoutParams MATCH_PARENT = new LayoutParams(LayoutParams.MATCH_PARENT,
+			LayoutParams.MATCH_PARENT);
+	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
+			LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+	private static final int OPEN_BOOKMARKS_HISTORY_ACTIVITY = 0;
+	private static final int OPEN_DOWNLOADS_ACTIVITY = 1;
+	private static final int OPEN_FILE_CHOOSER_ACTIVITY = 2;
+	private static final int Open_Url = 4;
+	// List
+	private final List<LightningView> mWebViews = new ArrayList<>();
+	//private LightningView getCurrentWebView();
+	private final ColorDrawable mBackground = new ColorDrawable();
+	protected boolean isFinished = false;
+	GestureDetector detector = null;
+	TextView windowsText = null;
+	View settingPanel = null;
+	boolean showSetting = false;
+	View tabsPanel = null;
+	boolean showTabs = false;
+	Button fullscreenCancelBtn = null;
+	View shortcutToolbar = null;
+	ECListDialog bookMarkMenuDlg = null;
+	ECListDialog linkMenuDlg = null;
+	ECListDialog historyMenuDlg = null;
+	String historyUrl = null;
+	String bookmarkUrl = null;
+	ECListDialog visitorImageDlg = null;
+	ECListDialog imageMenuDlg = null;
+	ECListDialog imageMenuGoodsDlg = null;
+	ECListDialog linkShareMenuDlg = null;
+	ECListDialog imgNewsDlg = null;
+	ECListDialog imageMenuDlgSocial = null;
+	ECListDialog imageMenuDlgMore = null;
+	boolean pageLoaded = false;
 	// Layout
 	private DrawerLayout mDrawerLayout;
 	private FrameLayout  mBrowserFrame;
@@ -151,86 +185,39 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private LinearLayout mDrawerLeft, mDrawerRight;
 	private LinearLayout mUiLayout, mToolbarLayout;
 	private RelativeLayout mSearchBar;
-
-	// List
-	private final List<LightningView> mWebViews = new ArrayList<>();
 	private List<HistoryItem> mBookmarkList;
-	//private LightningView getCurrentWebView();
-
-	GestureDetector detector = null;
-
 	private AnimatedProgressBar mProgressBar;
 	private AutoCompleteTextView mSearch;
 	private ImageView mArrowImage;
 	private VideoView mVideoView;
 	private View mCustomView, mVideoProgressView;
-
 	// Adapter
 	private BookmarkViewAdapter mBookmarkAdapter;
 	private LightningViewAdapter mTitleAdapter;
 	private SearchAdapter mSearchAdapter;
-
 	// Callback
 	private ClickHandler mClickHandler;
 	private CustomViewCallback mCustomViewCallback;
 	private ValueCallback<Uri> mUploadMessage;
 	private ValueCallback<Uri[]> mFilePathCallback;
-
 	// Context
 	private Activity mActivity;
-
 	// Native
 	private boolean mSystemBrowser = false, mIsNewIntent = false, mFullScreen, mColorMode,
 			mDarkTheme;
 	private int mOriginalOrientation, mBackgroundColor, mIdGenerator;
 	private String mSearchText, mUntitledTitle, mHomepage, mCameraPhotoPath;
-
 	// Storage
 	private HistoryDatabase mHistoryDatabase;
 	private BookmarkDatabase mBookmarkManager;
 	private PreferenceManager mPreferences;
-
 	// Image
 	private Bitmap mDefaultVideoPoster, mWebpageBitmap;
-	private final ColorDrawable mBackground = new ColorDrawable();
 	private Drawable mDeleteIcon, mRefreshIcon, mCopyIcon, mIcon;
 	private DrawerArrowDrawable mArrowDrawable;
-
 	// Helper
 	private boolean mI2PHelperBound;
 	private boolean mI2PProxyInitialized;
-
-	// Constant
-	private static final int API = android.os.Build.VERSION.SDK_INT;
-	private static final LayoutParams MATCH_PARENT = new LayoutParams(LayoutParams.MATCH_PARENT,
-			LayoutParams.MATCH_PARENT);
-	private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
-			LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if(StringUtils.isEmpty(PreferenceUtils.getUserId())){
-			PreferenceUtils.setAnonymous();
-		}
-
-		isFinished=false;
-		initialize();
-		detector = new GestureDetector(this,gestureListener);
-		//setHasOptionsMenu(true);
-
-		hideTabsPanel();
-		hideSettingPanel();
-
-
-
-		if(mDrawerLayout!=null) {
-			mDrawerLayout.closeDrawers();
-		}
-
-	}
-
-
 	private GestureDetector.OnGestureListener gestureListener=new GestureDetector.OnGestureListener() {
 		@Override
 		public boolean onDown(MotionEvent e) {
@@ -297,18 +284,68 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		}
 	};
+	private String currentClickUrl = "";
+	private String currentClickImageUrl = "";
+
+	public static boolean isColorTooDark(int color) {
+		final byte RED_CHANNEL = 16;
+		final byte GREEN_CHANNEL = 8;
+		//final byte BLUE_CHANNEL = 0;
+
+		int r = ((int) ((float) (color >> RED_CHANNEL & 0xff) * 0.3f)) & 0xff;
+		int g = ((int) ((float) (color >> GREEN_CHANNEL & 0xff) * 0.59)) & 0xff;
+		int b = ((int) ((float) (color & 0xff) * 0.11)) & 0xff;
+		int gr = (r + g + b) & 0xff;
+		int gray = gr + (gr << GREEN_CHANNEL) + (gr << RED_CHANNEL);
+
+		return gray < 0x727272;
+	}
+
+	public static int mixTwoColors(int color1, int color2, float amount) {
+		final byte ALPHA_CHANNEL = 24;
+		final byte RED_CHANNEL = 16;
+		final byte GREEN_CHANNEL = 8;
+		//final byte BLUE_CHANNEL = 0;
+
+		final float inverseAmount = 1.0f - amount;
+
+		int r = ((int) (((float) (color1 >> RED_CHANNEL & 0xff) * amount) + ((float) (color2 >> RED_CHANNEL & 0xff) * inverseAmount))) & 0xff;
+		int g = ((int) (((float) (color1 >> GREEN_CHANNEL & 0xff) * amount) + ((float) (color2 >> GREEN_CHANNEL & 0xff) * inverseAmount))) & 0xff;
+		int b = ((int) (((float) (color1 & 0xff) * amount) + ((float) (color2 & 0xff) * inverseAmount))) & 0xff;
+
+		return 0xff << ALPHA_CHANNEL | r << RED_CHANNEL | g << GREEN_CHANNEL | b;
+	}
+
+	static String getDomainName(String url) throws URISyntaxException {
+		URI uri = new URI(url);
+		String domain = uri.getHost();
+		if (domain == null) {
+			return url;
+		}
+		return domain.startsWith("www.") ? domain.substring(4) : domain;
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (StringUtils.isEmpty(PreferenceUtils.getUserId())) {
+			PreferenceUtils.setAnonymous();
+		}
+
+		isFinished = false;
+		initialize();
+		detector = new GestureDetector(this, gestureListener);
+		//setHasOptionsMenu(true);
+
+		hideTabsPanel();
+		hideSettingPanel();
 
 
+		if (mDrawerLayout != null) {
+			mDrawerLayout.closeDrawers();
+		}
 
-
-	TextView windowsText=null;
-
-
-	View settingPanel=null;
-	boolean showSetting=false;
-
-	View tabsPanel=null;
-	boolean showTabs=false;
+	}
 
 	void flipTabsPanel(){
 		if(tabsPanel==null){
@@ -359,7 +396,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		settingPanel.setVisibility(View.GONE);
 	}
 
-
 	void refreshWebPage(){
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -369,7 +405,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			}
 		}, 200);
 	}
-
 
 	@Override
 	public void onScrollChanged() {
@@ -393,8 +428,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		//swipeLayout.setRefreshing(false);
 	}
 
-	Button fullscreenCancelBtn=null;
-	View shortcutToolbar=null;
 	//SwipeRefreshLayout swipeLayout =null;
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -437,37 +470,19 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		mUiLayout = (LinearLayout) findViewById(R.id.ui_layout);
 		mProgressBar = (AnimatedProgressBar) findViewById(R.id.progress_view);
 
-		View forwardView=findViewById(R.id.forward_action);
-		forwardView.setOnClickListener(this);
 
-		View backwardView=findViewById(R.id.backward_action);
-		backwardView.setOnClickListener(this);
-
-
-
-		View editView=findViewById(R.id.edit_action);
-		editView.setOnClickListener(this);
-
-		View fullscreenView=findViewById(R.id.fullscreen_action);
-		fullscreenView.setOnClickListener(this);
-
-		View shareWebPageView=findViewById(R.id.share_web_page_action);
-		shareWebPageView.setOnClickListener(this);
 
 
 		fullscreenCancelBtn=(Button)findViewById(R.id.fullscreen_cancel);
 		fullscreenCancelBtn.setOnClickListener(this);
 
-
-		shortcutToolbar=findViewById(R.id.shortcut_toolbar);
+		/*
 		if(PreferenceUtils.isUserVisitor()){
 			editView.setVisibility(View.GONE);
 		}else{
 			editView.setVisibility(View.VISIBLE);
 		}
-
-		View favorateView=findViewById(R.id.favorite_action);
-		favorateView.setOnClickListener(this);
+		*/
 
 		RelativeLayout newTab = (RelativeLayout) findViewById(R.id.new_tab_button);
 
@@ -647,206 +662,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		//mDrawerRight.setVisibility(View.GONE);
 		//mDrawerLeft.setVisibility(View.GONE);
-
-	}
-
-
-
-	private class SearchClass {
-
-		public class KeyListener implements OnKeyListener {
-
-			@Override
-			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
-
-				switch (arg1) {
-					case KeyEvent.KEYCODE_ENTER:
-						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
-						searchTheWeb(mSearch.getText().toString());
-						LightningView v=getCurrentWebView();
-						if (v != null) {
-							v.requestFocus();
-						}
-						return true;
-					default:
-						break;
-				}
-				return false;
-			}
-
-		}
-
-		public class EditorActionListener implements OnEditorActionListener {
-			@Override
-			public boolean onEditorAction(TextView arg0, int actionId, KeyEvent arg2) {
-				// hide the keyboard and search the web when the enter key
-				// button is pressed
-				if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE
-						|| actionId == EditorInfo.IME_ACTION_NEXT
-						|| actionId == EditorInfo.IME_ACTION_SEND
-						|| actionId == EditorInfo.IME_ACTION_SEARCH
-						|| (arg2.getAction() == KeyEvent.KEYCODE_ENTER)) {
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
-					searchTheWeb(mSearch.getText().toString());
-					LightningView v=getCurrentWebView();
-					if (v != null) {
-						v.requestFocus();
-					}
-					return true;
-				}
-				return false;
-			}
-		}
-
-		public class FocusChangeListener implements OnFocusChangeListener {
-			@Override
-			public void onFocusChange(View v, final boolean hasFocus) {
-				LightningView wv=getCurrentWebView();
-				if (!hasFocus && wv != null) {
-					if (wv.getProgress() < 100) {
-						setIsLoading();
-					} else {
-						setIsFinishedLoading();
-					}
-					updateUrl(wv.getUrl(), true);
-				} else if (hasFocus) {
-					String url = wv.getUrl();
-					if (url == null || url.startsWith(Constants.FILE)) {
-						mSearch.setText("");
-					} else {
-						mSearch.setText(url);
-					}
-
-					if(ServerConfig.isSearchUrl(url)){
-						mSearch.setText(ServerConfig.getSearchWord(url));
-					}
-
-					((AutoCompleteTextView) v).selectAll(); // Hack to make sure
-															// the text gets
-															// selected
-					mIcon = mCopyIcon;
-					mSearch.setCompoundDrawables(null, null, mCopyIcon, null);
-				}
-				final Animation anim = new Animation() {
-
-					@Override
-					protected void applyTransformation(float interpolatedTime, Transformation t) {
-						if (!hasFocus) {
-							mArrowDrawable.setProgress(1.0f - interpolatedTime);
-						} else {
-							mArrowDrawable.setProgress(interpolatedTime);
-						}
-					}
-
-					@Override
-					public boolean willChangeBounds() {
-						return true;
-					}
-
-				};
-				anim.setDuration(300);
-				anim.setInterpolator(new DecelerateInterpolator());
-				anim.setAnimationListener(new AnimationListener() {
-
-					@Override
-					public void onAnimationStart(Animation animation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						if (!hasFocus) {
-							mArrowDrawable.setProgress(0.0f);
-						} else {
-							mArrowDrawable.setProgress(1.0f);
-						}
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-					}
-
-				});
-				new Handler().postDelayed(new Runnable() {
-
-					@Override
-					public void run() {
-						mArrowImage.startAnimation(anim);
-					}
-
-				}, 100);
-
-				if (!hasFocus) {
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
-				}
-			}
-		}
-
-		public class TouchListener implements OnTouchListener {
-
-			@SuppressLint("ClickableViewAccessibility")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (mSearch.getCompoundDrawables()[2] != null) {
-					boolean tappedX = event.getX() > (mSearch.getWidth()
-							- mSearch.getPaddingRight() - mIcon.getIntrinsicWidth());
-					if (tappedX) {
-						if (event.getAction() == MotionEvent.ACTION_UP) {
-							if (mSearch.hasFocus()) {
-								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-								ClipData clip = ClipData.newPlainText("label", mSearch.getText()
-										.toString());
-								clipboard.setPrimaryClip(clip);
-								Utils.showToast(
-										mActivity,
-										mActivity.getResources().getString(
-												R.string.message_text_copied));
-							} else {
-								refreshOrStop();
-							}
-						}
-						return true;
-					}
-				}
-				return false;
-			}
-
-		}
-	}
-
-	private class DrawerLocker implements DrawerListener {
-
-		@Override
-		public void onDrawerClosed(View v) {
-
-			if (v == mDrawerRight) {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerLeft);
-			} else {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerRight);
-			}
-
-		}
-
-		@Override
-		public void onDrawerOpened(View v) {
-
-			if (v == mDrawerRight) {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerLeft);
-			} else {
-				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerRight);
-			}
-
-		}
-
-		@Override
-		public void onDrawerSlide(View v, float arg) {
-		}
-
-		@Override
-		public void onDrawerStateChanged(int arg) {
-		}
 
 	}
 
@@ -1161,7 +976,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		return super.onKeyUp(keyCode, event);
 	}
 
-	protected boolean isFinished=false;
 	private void browserExit() {
 		SoftKeyboardUtil.hideSoftKeyboard(this);
 		isFinished=true;
@@ -1286,107 +1100,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	/**
-	 * The click listener for ListView in the navigation drawer
-	 */
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			mIsNewIntent = false;
-			showTab(mWebViews.get(position));
-		}
-
-	}
-
-	/**
-	 * long click listener for Navigation Drawer
-	 */
-	private class DrawerItemLongClickListener implements ListView.OnItemLongClickListener {
-
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
-			showCloseDialog(position);
-			return true;
-		}
-	}
-
-	private class BookmarkItemClickListener implements ListView.OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-			LightningView wv=getCurrentWebView();
-			if(wv==null){
-				return;
-			}
-
-
-			wv.loadUrl(mBookmarkList.get(position).getUrl());
-
-			// keep any jank from happening when the drawer is closed after the
-			// URL starts to load
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mDrawerLayout.closeDrawer(mDrawerRight);
-				}
-			}, 150);
-		}
-	}
-
-	private class BookmarkItemLongClickListener implements ListView.OnItemLongClickListener {
-
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-			builder.setTitle(mActivity.getResources().getString(R.string.action_bookmarks));
-			builder.setMessage(getResources().getString(R.string.dialog_bookmark))
-					.setCancelable(true)
-					.setPositiveButton(getResources().getString(R.string.action_new_tab),
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int id) {
-									newTab(mBookmarkList.get(position).getUrl(), true);
-									mDrawerLayout.closeDrawers();
-								}
-							})
-					.setNegativeButton(getResources().getString(R.string.action_delete),
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									if (mBookmarkManager.deleteBookmarkItem(
-											PreferenceUtils.getUserId(),
-											mBookmarkList.get(position)
-													.getUrl())) {
-										mBookmarkList.remove(position);
-										notifyBookmarkDataSetChanged();
-										mSearchAdapter.refreshBookmarks();
-										openBookmarks();
-									}
-								}
-							});
-
-					/*
-					.setNeutralButton(getResources().getString(R.string.action_edit_top),
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									editBookmark(position);
-								}
-							});
-							*/
-
-			AlertDialog alert = builder.create();
-			alert.show();
-			return true;
-		}
-	}
-
-	/**
 	 * Takes in the id of which bookmark was selected and shows a dialog that
 	 * allows the user to rename and change the url of the bookmark
 	 *
@@ -1406,8 +1119,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 		return null;
 	}
-
-
 
 	/**
 	 * displays the WebView contained in the LightningView Also handles the
@@ -1475,8 +1186,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 
 	}
-
-
 
 	/**
 	 * creates a new tab with the passed in URL if it isn't null
@@ -1568,7 +1277,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onTrimMemory(int level) {
@@ -1659,6 +1367,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		return 0;
 
 	}
+
 	int getTabIndex(LightningView lv){
 		for(int i=0;i<mWebViews.size();i++){
 			LightningView v=mWebViews.get(i);
@@ -1676,7 +1385,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		LightningView lv=getLightningView(mBrowserFrame.getChildAt(0));
 		return lv;
 	}
-
 
 	void onWebViewTouchUp(MotionEvent event){
 		hideSettingPanel();
@@ -1772,7 +1480,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		windowsText.setText(String.valueOf(mWebViews.size()));
 	}
 
-
 	@Override
 	public boolean onKeyLongPress(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1798,7 +1505,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			Log.d(Constants.TAG, "Cookies Cleared");
 
 		}
-		
+
 		for (int n = 0; n < mWebViews.size(); n++) {
 			if (mWebViews.get(n) != null) {
 				mWebViews.get(n).onDestroy();
@@ -2044,257 +1751,12 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	public class LightningViewAdapter extends ArrayAdapter<LightningView> {
-
-		final Context context;
-		ColorMatrix colorMatrix;
-		ColorMatrixColorFilter filter;
-		Paint paint;
-		final int layoutResourceId;
-		List<LightningView> data = null;
-		final CloseTabListener mExitListener;
-
-		public LightningViewAdapter(Context context, int layoutResourceId, List<LightningView> data) {
-			super(context, layoutResourceId, data);
-			this.layoutResourceId = layoutResourceId;
-			this.context = context;
-			this.data = data;
-			this.mExitListener = new CloseTabListener();
-		}
-
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-			LightningViewHolder holder;
-			if (row == null) {
-				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-				row = inflater.inflate(layoutResourceId, parent, false);
-
-				holder = new LightningViewHolder();
-				holder.txtTitle = (TextView) row.findViewById(R.id.textTab);
-				holder.favicon = (ImageView) row.findViewById(R.id.faviconTab);
-				holder.exit = (ImageView) row.findViewById(R.id.deleteButton);
-				holder.exit.setTag(position);
-				row.setTag(holder);
-			} else {
-				holder = (LightningViewHolder) row.getTag();
-			}
-
-			holder.exit.setTag(position);
-			holder.exit.setOnClickListener(mExitListener);
-
-			ViewCompat.jumpDrawablesToCurrentState(holder.exit);
-
-			LightningView web = data.get(position);
-			holder.txtTitle.setText(web.getTitle());
-			if (web.isForegroundTab()) {
-				holder.txtTitle.setTextAppearance(context, R.style.boldText);
-			} else {
-				holder.txtTitle.setTextAppearance(context, R.style.normalText);
-			}
-
-			Bitmap favicon = web.getFavicon();
-			if (web.isForegroundTab()) {
-
-				holder.favicon.setImageBitmap(favicon);
-				if (!isIncognito() && mColorMode)
-					changeToolbarBackground(favicon);
-			} else {
-				Bitmap grayscaleBitmap = Bitmap.createBitmap(favicon.getWidth(),
-						favicon.getHeight(), Bitmap.Config.ARGB_8888);
-
-				Canvas c = new Canvas(grayscaleBitmap);
-				if (colorMatrix == null || filter == null || paint == null) {
-					paint = new Paint();
-					colorMatrix = new ColorMatrix();
-					colorMatrix.setSaturation(0);
-					filter = new ColorMatrixColorFilter(colorMatrix);
-					paint.setColorFilter(filter);
-				}
-
-				c.drawBitmap(favicon, 0, 0, paint);
-				holder.favicon.setImageBitmap(grayscaleBitmap);
-			}
-			return row;
-		}
-
-		class LightningViewHolder {
-			TextView txtTitle;
-			ImageView favicon;
-			ImageView exit;
-		}
-	}
-
-	private class CloseTabListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			deleteTab((int) v.getTag());
-		}
-
-	}
-
 	private void changeToolbarBackground(Bitmap favicon) {
 
 	}
 
-	public static boolean isColorTooDark(int color) {
-		final byte RED_CHANNEL = 16;
-		final byte GREEN_CHANNEL = 8;
-		//final byte BLUE_CHANNEL = 0;
-
-		int r = ((int) ((float) (color >> RED_CHANNEL & 0xff) * 0.3f)) & 0xff;
-		int g = ((int) ((float) (color >> GREEN_CHANNEL & 0xff) * 0.59)) & 0xff;
-		int b = ((int) ((float) (color & 0xff) * 0.11)) & 0xff;
-		int gr = (r + g + b) & 0xff;
-		int gray = gr + (gr << GREEN_CHANNEL) + (gr << RED_CHANNEL);
-
-		return gray < 0x727272;
-	}
-
-	public static int mixTwoColors(int color1, int color2, float amount) {
-		final byte ALPHA_CHANNEL = 24;
-		final byte RED_CHANNEL = 16;
-		final byte GREEN_CHANNEL = 8;
-		//final byte BLUE_CHANNEL = 0;
-
-		final float inverseAmount = 1.0f - amount;
-
-		int r = ((int) (((float) (color1 >> RED_CHANNEL & 0xff) * amount) + ((float) (color2 >> RED_CHANNEL & 0xff) * inverseAmount))) & 0xff;
-		int g = ((int) (((float) (color1 >> GREEN_CHANNEL & 0xff) * amount) + ((float) (color2 >> GREEN_CHANNEL & 0xff) * inverseAmount))) & 0xff;
-		int b = ((int) (((float) (color1 & 0xff) * amount) + ((float) (color2 & 0xff) * inverseAmount))) & 0xff;
-
-		return 0xff << ALPHA_CHANNEL | r << RED_CHANNEL | g << GREEN_CHANNEL | b;
-	}
-
-	public class BookmarkViewAdapter extends ArrayAdapter<HistoryItem> {
-
-		final Context context;
-		List<HistoryItem> data = null;
-		final int layoutResourceId;
-
-		public BookmarkViewAdapter(Context context, int layoutResourceId, List<HistoryItem> data) {
-			super(context, layoutResourceId, data);
-			this.layoutResourceId = layoutResourceId;
-			this.context = context;
-			this.data = data;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-			BookmarkViewHolder holder;
-
-			if (row == null) {
-				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-				row = inflater.inflate(layoutResourceId, parent, false);
-
-				holder = new BookmarkViewHolder();
-				holder.txtTitle = (TextView) row.findViewById(R.id.textBookmark);
-				holder.favicon = (ImageView) row.findViewById(R.id.faviconBookmark);
-				row.setTag(holder);
-			} else {
-				holder = (BookmarkViewHolder) row.getTag();
-			}
-
-			HistoryItem web = data.get(position);
-			holder.txtTitle.setText(web.getTitle());
-			holder.favicon.setImageBitmap(mWebpageBitmap);
-			if (web.getBitmap() == null) {
-				getImage(holder.favicon, web);
-			} else {
-				holder.favicon.setImageBitmap(web.getBitmap());
-			}
-			return row;
-		}
-
-		class BookmarkViewHolder {
-			TextView txtTitle;
-			ImageView favicon;
-		}
-	}
-
 	private void getImage(ImageView image, HistoryItem web) {
 		new DownloadImageTask(image, web).execute(web.getUrl());
-	}
-
-	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-		final ImageView bmImage;
-		final HistoryItem mWeb;
-
-		public DownloadImageTask(ImageView bmImage, HistoryItem web) {
-			this.bmImage = bmImage;
-			this.mWeb = web;
-		}
-
-		protected Bitmap doInBackground(String... urls) {
-			String url = urls[0];
-			Bitmap mIcon = null;
-			// unique path for each url that is bookmarked.
-			String hash = String.valueOf(Utils.getDomainName(url).hashCode());
-			File image = new File(mActivity.getCacheDir(), hash + ".png");
-			String urldisplay;
-			try {
-				urldisplay = Utils.getProtocol(url) + getDomainName(url) + "/favicon.ico";
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				return mWebpageBitmap;
-			}
-			// checks to see if the image exists
-			if (!image.exists()) {
-				try {
-					// if not, download it...
-					URL urlDownload = new URL(urldisplay);
-					HttpURLConnection connection = (HttpURLConnection) urlDownload.openConnection();
-					connection.setDoInput(true);
-					connection.connect();
-					InputStream in = connection.getInputStream();
-
-					if (in != null) {
-						mIcon = BitmapFactory.decodeStream(in);
-					}
-					// ...and cache it
-					if (mIcon != null) {
-						FileOutputStream fos = new FileOutputStream(image);
-						mIcon.compress(Bitmap.CompressFormat.PNG, 100, fos);
-						fos.flush();
-						fos.close();
-						Log.d(Constants.TAG, "Downloaded: " + urldisplay);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				// if it exists, retrieve it from the cache
-				mIcon = BitmapFactory.decodeFile(image.getPath());
-			}
-			if (mIcon == null) {
-
-			}
-			if (mIcon == null) {
-				return mWebpageBitmap;
-			} else {
-				return mIcon;
-			}
-		}
-
-		protected void onPostExecute(Bitmap result) {
-			Bitmap fav = Utils.padFavicon(result);
-			bmImage.setImageBitmap(fav);
-			mWeb.setBitmap(fav);
-			notifyBookmarkDataSetChanged();
-		}
-	}
-
-	static String getDomainName(String url) throws URISyntaxException {
-		URI uri = new URI(url);
-		String domain = uri.getHost();
-		if (domain == null) {
-			return url;
-		}
-		return domain.startsWith("www.") ? domain.substring(4) : domain;
 	}
 
 	@Override
@@ -2494,12 +1956,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		history.run();
 	}
 
-	private static final int OPEN_BOOKMARKS_HISTORY_ACTIVITY = 0;
-	private static final int OPEN_DOWNLOADS_ACTIVITY = 1;
-	private static final int OPEN_FILE_CHOOSER_ACTIVITY = 2;
-	public static final int Open_Browser_Input = 3;
-
-	private static final int Open_Url = 4;
 	private void openHotSiteActivity() {
 
 		Intent intent=new Intent(this, SiteHotActivity.class);
@@ -2524,9 +1980,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		startActivityForResult(intent, Open_Url);
 
 	}
-
-
-
 
 	/**
 	 * helper function that opens the bookmark drawer
@@ -2786,21 +2239,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		setRequestedOrientation(mOriginalOrientation);
 	}
 
-	private class VideoCompletionListener implements MediaPlayer.OnCompletionListener,
-			MediaPlayer.OnErrorListener {
-
-		@Override
-		public boolean onError(MediaPlayer mp, int what, int extra) {
-			return false;
-		}
-
-		@Override
-		public void onCompletion(MediaPlayer mp) {
-			onHideCustomView();
-		}
-
-	}
-
 	/**
 	 * turns on fullscreen mode in the app
 	 *
@@ -2836,7 +2274,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	void fullscreenCancel(){
 		if(mToolbarLayout!=null){
 			mToolbarLayout.setVisibility(View.VISIBLE);
@@ -2848,23 +2285,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		if(fullscreenCancelBtn!=null){
 			fullscreenCancelBtn.setVisibility(View.GONE);
 		}
-	}
-	/**
-	 * a class extending FramLayout used to display fullscreen videos
-	 */
-	static class FullscreenHolder extends FrameLayout {
-
-		public FullscreenHolder(Context ctx) {
-			super(ctx);
-			setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
-		}
-
-		@SuppressLint("ClickableViewAccessibility")
-		@Override
-		public boolean onTouchEvent(MotionEvent evt) {
-			return true;
-		}
-
 	}
 
 	@Override
@@ -3180,14 +2600,12 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 						dialogClickListener).show();
 	}
 
-
 	private void onLinkLongClick(final String url) {
 		this.currentClickUrl =url;
 		this.currentClickImageUrl="";
 		ECListDialog dialog = getLinkMenuDialog();
 		dialog.show();
 	}
-
 
 	private void onBookmarkLongClick(final String url) {
 		ECListDialog dialog = getBookmarkMenuDialog(url);
@@ -3199,7 +2617,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		dialog.show();
 	}
 
-	ECListDialog bookMarkMenuDlg=null;
 	private ECListDialog getBookmarkMenuDialog(final String url) {
 		bookmarkUrl=url;
 		if(bookMarkMenuDlg!=null){
@@ -3221,9 +2638,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
-	private String currentClickUrl ="";
-	private String currentClickImageUrl ="";
 	private void onImageLongClick(final String url,final String imageUrl) {
 		this.currentClickUrl =url;
 		this.currentClickImageUrl=imageUrl;
@@ -3231,8 +2645,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		dialog.show();
 	}
 
-
-	ECListDialog linkMenuDlg=null;
 	private ECListDialog getLinkMenuDialog() {
 		if(linkMenuDlg!=null){
 			return linkMenuDlg;
@@ -3251,7 +2663,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	void deleteBookmarkUrl(final String url) {
 		//ToastUtil.showMessage(bookmarkUrl);
 		if (url == null) {
@@ -3265,9 +2676,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
-	ECListDialog historyMenuDlg=null;
-	String historyUrl=null;
 	private ECListDialog getHistoryMenuDialog(final String url) {
 		historyUrl=url;
 
@@ -3296,8 +2704,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 				break;
 		}
 	}
-
-
 
 	void deleteHistory(final String url) {
 		//ToastUtil.showMessage(url);
@@ -3330,7 +2736,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	String bookmarkUrl=null;
 	private void onBookmarkMenuClicked(Dialog d, int position) {
 		switch (position) {
 			case 0:
@@ -3362,7 +2767,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	ECListDialog visitorImageDlg=null;
 	private ECListDialog getVisitorImageDialog() {
 		if (visitorImageDlg != null) {
 			return visitorImageDlg;
@@ -3381,7 +2785,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		return visitorImageDlg;
 	}
 
-
 	private void onImageVisitorMenuClicked(Dialog d, int position) {
 
 		switch (position) {
@@ -3394,9 +2797,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	ECListDialog imageMenuDlg=null;
-	ECListDialog imageMenuGoodsDlg=null;
-
 	private void onTopbarShareClick() {
 
 		this.currentClickUrl =getCurrentWebView().getUrl();
@@ -3407,9 +2807,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
-
-	ECListDialog linkShareMenuDlg=null;
 	private ECListDialog getLinkShareMenuDialog() {
 		if(PreferenceUtils.isUserVisitor()){
 			return getImageMenuDialogSocial();
@@ -3450,8 +2847,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 				break;
 		}
 	}
-
-
 
 	private ECListDialog getImageMenuDialog() {
 		if(PreferenceUtils.isUserVisitor()){
@@ -3507,7 +2902,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-	ECListDialog imgNewsDlg =null;
 	private ECListDialog getImageMenuDialogNews() {
 		if (imgNewsDlg != null) {
 			return imgNewsDlg;
@@ -3527,9 +2921,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
-
-	ECListDialog imageMenuDlgSocial=null;
 	private ECListDialog getImageMenuDialogSocial() {
 		if(imageMenuDlgSocial!=null){
 			return imageMenuDlgSocial;
@@ -3570,7 +2961,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	private void shareQQFriend(String url,String title,String imageUrl){
 
 		QQShareApi.shareWebPageQQFriend(this, url, title, "", imageUrl, new IUiListener() {
@@ -3610,7 +3000,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		});
 	}
 
-
 	private void shareWeixinFriend(String url,String title,String imageUrl){
 		WeixinShareApi.shareWebPage(url, title, "", imageUrl, false);
 	}
@@ -3619,8 +3008,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		WeixinShareApi.shareWebPage(url, title, "", imageUrl, true);
 	}
 
-
-	ECListDialog imageMenuDlgMore=null;
 	private ECListDialog getImageMenuDialogMore() {
 		if(imageMenuDlgMore!=null){
 			return imageMenuDlgMore;
@@ -3674,7 +3061,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	public void shareImageFavorite(final String img) {
 
 
@@ -3682,12 +3068,10 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	private void onShareImageFavoritePage(String url,String title, String img, HtmlPage page) {
 
 
 	}
-
 
 	public void shareImageCircle(final String img) {
 
@@ -3750,7 +3134,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-
 	private void onImageNewsMenuClicked(Dialog d, int position) {
 		switch (position) {
 
@@ -3776,8 +3159,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-
-
 	private void openImageMenuSocial() {
 		ECListDialog dialog = getImageMenuDialogSocial();
 		dialog.show();
@@ -3787,7 +3168,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		ECListDialog dialog = getImageMenuDialogMore();
 		dialog.show();
 	}
-
 
 	public void shareImageGoods(String img) {
 
@@ -3847,7 +3227,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 						dialogClickListener).show();
 	}
 
-
 	/**
 	 * This method lets the search bar know that the page is currently loading
 	 * and that it should display the stop icon to indicate to the user that
@@ -3860,7 +3239,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	boolean pageLoaded=false;
 	/**
 	 * This tells the search bar that the page is finished loading and it should
 	 * display the refresh icon
@@ -3908,23 +3286,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	public void closeActivity() {
 		finish();
 	}
-
-	public class SortIgnoreCase implements Comparator<HistoryItem> {
-
-		public int compare(HistoryItem o1, HistoryItem o2) {
-			return o1.getTitle().toLowerCase(Locale.getDefault())
-					.compareTo(o2.getTitle().toLowerCase(Locale.getDefault()));
-		}
-
-	}
-
-	/*
-	@Override
-	public int getMenu() {
-		return R.menu.main;
-	}
-
-*/
 
 	@Override
 	public void onClick(View v) {
@@ -4014,7 +3375,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 				openHistoryActivity();
 				break;
 
-			case R.id.favorite_action:
+			case R.id.favorite_history_action:
 				openSiteHotActivity();
 				break;
 			case R.id.add_bookmark_btn:
@@ -4048,7 +3409,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-
 	public void onStartEditHtmlPage(HtmlPage page){
 
 	}
@@ -4067,7 +3427,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 
 	}
-
 
 	private  void addCurrentUrlToBookmark(){
 		LightningView mCurrentView=getCurrentWebView();
@@ -4096,5 +3455,561 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		Intent intent = new Intent(this,BrowserTab2Activity.class);
 		startActivity(intent);
 		*/
+	}
+
+	/**
+	 * a class extending FramLayout used to display fullscreen videos
+	 */
+	static class FullscreenHolder extends FrameLayout {
+
+		public FullscreenHolder(Context ctx) {
+			super(ctx);
+			setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+		}
+
+		@SuppressLint("ClickableViewAccessibility")
+		@Override
+		public boolean onTouchEvent(MotionEvent evt) {
+			return true;
+		}
+
+	}
+
+	private class SearchClass {
+
+		public class KeyListener implements OnKeyListener {
+
+			@Override
+			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+
+				switch (arg1) {
+					case KeyEvent.KEYCODE_ENTER:
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
+						searchTheWeb(mSearch.getText().toString());
+						LightningView v = getCurrentWebView();
+						if (v != null) {
+							v.requestFocus();
+						}
+						return true;
+					default:
+						break;
+				}
+				return false;
+			}
+
+		}
+
+		public class EditorActionListener implements OnEditorActionListener {
+			@Override
+			public boolean onEditorAction(TextView arg0, int actionId, KeyEvent arg2) {
+				// hide the keyboard and search the web when the enter key
+				// button is pressed
+				if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE
+						|| actionId == EditorInfo.IME_ACTION_NEXT
+						|| actionId == EditorInfo.IME_ACTION_SEND
+						|| actionId == EditorInfo.IME_ACTION_SEARCH
+						|| (arg2.getAction() == KeyEvent.KEYCODE_ENTER)) {
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
+					searchTheWeb(mSearch.getText().toString());
+					LightningView v = getCurrentWebView();
+					if (v != null) {
+						v.requestFocus();
+					}
+					return true;
+				}
+				return false;
+			}
+		}
+
+		public class FocusChangeListener implements OnFocusChangeListener {
+			@Override
+			public void onFocusChange(View v, final boolean hasFocus) {
+				LightningView wv = getCurrentWebView();
+				if (!hasFocus && wv != null) {
+					if (wv.getProgress() < 100) {
+						setIsLoading();
+					} else {
+						setIsFinishedLoading();
+					}
+					updateUrl(wv.getUrl(), true);
+				} else if (hasFocus) {
+					String url = wv.getUrl();
+					if (url == null || url.startsWith(Constants.FILE)) {
+						mSearch.setText("");
+					} else {
+						mSearch.setText(url);
+					}
+
+					if (ServerConfig.isSearchUrl(url)) {
+						mSearch.setText(ServerConfig.getSearchWord(url));
+					}
+
+					((AutoCompleteTextView) v).selectAll(); // Hack to make sure
+					// the text gets
+					// selected
+					mIcon = mCopyIcon;
+					mSearch.setCompoundDrawables(null, null, mCopyIcon, null);
+				}
+				final Animation anim = new Animation() {
+
+					@Override
+					protected void applyTransformation(float interpolatedTime, Transformation t) {
+						if (!hasFocus) {
+							mArrowDrawable.setProgress(1.0f - interpolatedTime);
+						} else {
+							mArrowDrawable.setProgress(interpolatedTime);
+						}
+					}
+
+					@Override
+					public boolean willChangeBounds() {
+						return true;
+					}
+
+				};
+				anim.setDuration(300);
+				anim.setInterpolator(new DecelerateInterpolator());
+				anim.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						if (!hasFocus) {
+							mArrowDrawable.setProgress(0.0f);
+						} else {
+							mArrowDrawable.setProgress(1.0f);
+						}
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+					}
+
+				});
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						mArrowImage.startAnimation(anim);
+					}
+
+				}, 100);
+
+				if (!hasFocus) {
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
+				}
+			}
+		}
+
+		public class TouchListener implements OnTouchListener {
+
+			@SuppressLint("ClickableViewAccessibility")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (mSearch.getCompoundDrawables()[2] != null) {
+					boolean tappedX = event.getX() > (mSearch.getWidth()
+							- mSearch.getPaddingRight() - mIcon.getIntrinsicWidth());
+					if (tappedX) {
+						if (event.getAction() == MotionEvent.ACTION_UP) {
+							if (mSearch.hasFocus()) {
+								ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+								ClipData clip = ClipData.newPlainText("label", mSearch.getText()
+										.toString());
+								clipboard.setPrimaryClip(clip);
+								Utils.showToast(
+										mActivity,
+										mActivity.getResources().getString(
+												R.string.message_text_copied));
+							} else {
+								refreshOrStop();
+							}
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+
+		}
+	}
+
+	private class DrawerLocker implements DrawerListener {
+
+		@Override
+		public void onDrawerClosed(View v) {
+
+			if (v == mDrawerRight) {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerLeft);
+			} else {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerRight);
+			}
+
+		}
+
+		@Override
+		public void onDrawerOpened(View v) {
+
+			if (v == mDrawerRight) {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerLeft);
+			} else {
+				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerRight);
+			}
+
+		}
+
+		@Override
+		public void onDrawerSlide(View v, float arg) {
+		}
+
+		@Override
+		public void onDrawerStateChanged(int arg) {
+		}
+
+	}
+
+	/**
+	 * The click listener for ListView in the navigation drawer
+	 */
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			mIsNewIntent = false;
+			showTab(mWebViews.get(position));
+		}
+
+	}
+
+	/**
+	 * long click listener for Navigation Drawer
+	 */
+	private class DrawerItemLongClickListener implements ListView.OnItemLongClickListener {
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+			showCloseDialog(position);
+			return true;
+		}
+	}
+
+	private class BookmarkItemClickListener implements ListView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+			LightningView wv = getCurrentWebView();
+			if (wv == null) {
+				return;
+			}
+
+
+			wv.loadUrl(mBookmarkList.get(position).getUrl());
+
+			// keep any jank from happening when the drawer is closed after the
+			// URL starts to load
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mDrawerLayout.closeDrawer(mDrawerRight);
+				}
+			}, 150);
+		}
+	}
+
+	/*
+	@Override
+	public int getMenu() {
+		return R.menu.main;
+	}
+
+*/
+
+	private class BookmarkItemLongClickListener implements ListView.OnItemLongClickListener {
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+			builder.setTitle(mActivity.getResources().getString(R.string.action_bookmarks));
+			builder.setMessage(getResources().getString(R.string.dialog_bookmark))
+					.setCancelable(true)
+					.setPositiveButton(getResources().getString(R.string.action_new_tab),
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									newTab(mBookmarkList.get(position).getUrl(), true);
+									mDrawerLayout.closeDrawers();
+								}
+							})
+					.setNegativeButton(getResources().getString(R.string.action_delete),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (mBookmarkManager.deleteBookmarkItem(
+											PreferenceUtils.getUserId(),
+											mBookmarkList.get(position)
+													.getUrl())) {
+										mBookmarkList.remove(position);
+										notifyBookmarkDataSetChanged();
+										mSearchAdapter.refreshBookmarks();
+										openBookmarks();
+									}
+								}
+							});
+
+					/*
+					.setNeutralButton(getResources().getString(R.string.action_edit_top),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									editBookmark(position);
+								}
+							});
+							*/
+
+			AlertDialog alert = builder.create();
+			alert.show();
+			return true;
+		}
+	}
+
+	public class LightningViewAdapter extends ArrayAdapter<LightningView> {
+
+		final Context context;
+		final int layoutResourceId;
+		final CloseTabListener mExitListener;
+		ColorMatrix colorMatrix;
+		ColorMatrixColorFilter filter;
+		Paint paint;
+		List<LightningView> data = null;
+
+		public LightningViewAdapter(Context context, int layoutResourceId, List<LightningView> data) {
+			super(context, layoutResourceId, data);
+			this.layoutResourceId = layoutResourceId;
+			this.context = context;
+			this.data = data;
+			this.mExitListener = new CloseTabListener();
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+			LightningViewHolder holder;
+			if (row == null) {
+				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				row = inflater.inflate(layoutResourceId, parent, false);
+
+				holder = new LightningViewHolder();
+				holder.txtTitle = (TextView) row.findViewById(R.id.textTab);
+				holder.favicon = (ImageView) row.findViewById(R.id.faviconTab);
+				holder.exit = (ImageView) row.findViewById(R.id.deleteButton);
+				holder.exit.setTag(position);
+				row.setTag(holder);
+			} else {
+				holder = (LightningViewHolder) row.getTag();
+			}
+
+			holder.exit.setTag(position);
+			holder.exit.setOnClickListener(mExitListener);
+
+			ViewCompat.jumpDrawablesToCurrentState(holder.exit);
+
+			LightningView web = data.get(position);
+			holder.txtTitle.setText(web.getTitle());
+			if (web.isForegroundTab()) {
+				holder.txtTitle.setTextAppearance(context, R.style.boldText);
+			} else {
+				holder.txtTitle.setTextAppearance(context, R.style.normalText);
+			}
+
+			Bitmap favicon = web.getFavicon();
+			if (web.isForegroundTab()) {
+
+				holder.favicon.setImageBitmap(favicon);
+				if (!isIncognito() && mColorMode)
+					changeToolbarBackground(favicon);
+			} else {
+				Bitmap grayscaleBitmap = Bitmap.createBitmap(favicon.getWidth(),
+						favicon.getHeight(), Bitmap.Config.ARGB_8888);
+
+				Canvas c = new Canvas(grayscaleBitmap);
+				if (colorMatrix == null || filter == null || paint == null) {
+					paint = new Paint();
+					colorMatrix = new ColorMatrix();
+					colorMatrix.setSaturation(0);
+					filter = new ColorMatrixColorFilter(colorMatrix);
+					paint.setColorFilter(filter);
+				}
+
+				c.drawBitmap(favicon, 0, 0, paint);
+				holder.favicon.setImageBitmap(grayscaleBitmap);
+			}
+			return row;
+		}
+
+		class LightningViewHolder {
+			TextView txtTitle;
+			ImageView favicon;
+			ImageView exit;
+		}
+	}
+
+	private class CloseTabListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			deleteTab((int) v.getTag());
+		}
+
+	}
+
+	public class BookmarkViewAdapter extends ArrayAdapter<HistoryItem> {
+
+		final Context context;
+		final int layoutResourceId;
+		List<HistoryItem> data = null;
+
+		public BookmarkViewAdapter(Context context, int layoutResourceId, List<HistoryItem> data) {
+			super(context, layoutResourceId, data);
+			this.layoutResourceId = layoutResourceId;
+			this.context = context;
+			this.data = data;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+			BookmarkViewHolder holder;
+
+			if (row == null) {
+				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+				row = inflater.inflate(layoutResourceId, parent, false);
+
+				holder = new BookmarkViewHolder();
+				holder.txtTitle = (TextView) row.findViewById(R.id.textBookmark);
+				holder.favicon = (ImageView) row.findViewById(R.id.faviconBookmark);
+				row.setTag(holder);
+			} else {
+				holder = (BookmarkViewHolder) row.getTag();
+			}
+
+			HistoryItem web = data.get(position);
+			holder.txtTitle.setText(web.getTitle());
+			holder.favicon.setImageBitmap(mWebpageBitmap);
+			if (web.getBitmap() == null) {
+				getImage(holder.favicon, web);
+			} else {
+				holder.favicon.setImageBitmap(web.getBitmap());
+			}
+			return row;
+		}
+
+		class BookmarkViewHolder {
+			TextView txtTitle;
+			ImageView favicon;
+		}
+	}
+
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+		final ImageView bmImage;
+		final HistoryItem mWeb;
+
+		public DownloadImageTask(ImageView bmImage, HistoryItem web) {
+			this.bmImage = bmImage;
+			this.mWeb = web;
+		}
+
+		protected Bitmap doInBackground(String... urls) {
+			String url = urls[0];
+			Bitmap mIcon = null;
+			// unique path for each url that is bookmarked.
+			String hash = String.valueOf(Utils.getDomainName(url).hashCode());
+			File image = new File(mActivity.getCacheDir(), hash + ".png");
+			String urldisplay;
+			try {
+				urldisplay = Utils.getProtocol(url) + getDomainName(url) + "/favicon.ico";
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+				return mWebpageBitmap;
+			}
+			// checks to see if the image exists
+			if (!image.exists()) {
+				try {
+					// if not, download it...
+					URL urlDownload = new URL(urldisplay);
+					HttpURLConnection connection = (HttpURLConnection) urlDownload.openConnection();
+					connection.setDoInput(true);
+					connection.connect();
+					InputStream in = connection.getInputStream();
+
+					if (in != null) {
+						mIcon = BitmapFactory.decodeStream(in);
+					}
+					// ...and cache it
+					if (mIcon != null) {
+						FileOutputStream fos = new FileOutputStream(image);
+						mIcon.compress(Bitmap.CompressFormat.PNG, 100, fos);
+						fos.flush();
+						fos.close();
+						Log.d(Constants.TAG, "Downloaded: " + urldisplay);
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				// if it exists, retrieve it from the cache
+				mIcon = BitmapFactory.decodeFile(image.getPath());
+			}
+			if (mIcon == null) {
+
+			}
+			if (mIcon == null) {
+				return mWebpageBitmap;
+			} else {
+				return mIcon;
+			}
+		}
+
+		protected void onPostExecute(Bitmap result) {
+			Bitmap fav = Utils.padFavicon(result);
+			bmImage.setImageBitmap(fav);
+			mWeb.setBitmap(fav);
+			notifyBookmarkDataSetChanged();
+		}
+	}
+
+	private class VideoCompletionListener implements MediaPlayer.OnCompletionListener,
+			MediaPlayer.OnErrorListener {
+
+		@Override
+		public boolean onError(MediaPlayer mp, int what, int extra) {
+			return false;
+		}
+
+		@Override
+		public void onCompletion(MediaPlayer mp) {
+			onHideCustomView();
+		}
+
+	}
+
+	public class SortIgnoreCase implements Comparator<HistoryItem> {
+
+		public int compare(HistoryItem o1, HistoryItem o2) {
+			return o1.getTitle().toLowerCase(Locale.getDefault())
+					.compareTo(o2.getTitle().toLowerCase(Locale.getDefault()));
+		}
+
 	}
 }

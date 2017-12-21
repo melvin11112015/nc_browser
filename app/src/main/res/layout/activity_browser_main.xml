@@ -1,8 +1,7 @@
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -16,229 +15,145 @@
             android:background="@null"
 
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/ui_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="0dp"
                 android:orientation="vertical">
+
                 <include layout="@layout/browser_toolbar" />
 
-                <HorizontalScrollView
-                    android:id="@+id/shortcut_toolbar"
-                    android:visibility="visible"
-                    android:layout_height="wrap_content"
-                    android:background="@color/gray_lighter"
-                    android:layout_width="match_parent">
-
-                    <LinearLayout
-                        android:id="@+id/toolbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_alignParentTop="true"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal"
-                        android:layout_gravity="bottom"
-                        android:background="@color/gray_lighter"
-                        android:weightSum="5" >
-
-                        <RelativeLayout
-                            android:id="@+id/backward_action"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/select_button_semitrans"
-                            android:clickable="true" >
-                            <TextView
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/backward"
-                                />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:background="@drawable/select_button_semitrans"
-                            android:layout_alignParentBottom="true"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:id="@+id/forward_action"
-                            android:clickable="true" >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/forward"
-                                />
-                        </RelativeLayout>
-
-
-
-                        <RelativeLayout
-
-                            android:layout_alignParentBottom="true"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:id="@+id/favorite_action"
-                            android:background="@drawable/select_button_semitrans"
-                            android:clickable="true" >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/history"
-                                />
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:background="@drawable/select_button_semitrans"
-                            android:layout_alignParentBottom="true"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:id="@+id/share_web_page_action"
-                            android:clickable="true" >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/share_web_page_simple"
-                                />
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:id="@+id/fullscreen_action"
-                            android:background="@drawable/select_button_semitrans"
-                            android:layout_alignParentBottom="true"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-
-                            android:clickable="true" >
-
-                            <TextView
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/full_screen"
-                                />
-
-                        </RelativeLayout>
-
-
-
-                        <RelativeLayout
-                            android:background="@drawable/select_button_semitrans"
-                            android:layout_alignParentBottom="true"
-                            android:layout_width="64dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:id="@+id/edit_action"
-                            android:clickable="true" >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-
-                                android:paddingBottom="4dp"
-                                android:paddingLeft="4dp"
-                                android:paddingRight="4dp"
-                                android:paddingTop="4dp"
-                                android:textSize="16sp"
-                                android:textColor="@color/gray_dark"
-                                android:text="@string/edit"
-                                />
-                        </RelativeLayout>
-
-                    </LinearLayout>
-                </HorizontalScrollView>
 
                 <FrameLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    >
+                    android:layout_weight="1">
 
 
-
-                    <FrameLayout android:id="@+id/browser_views"
+                    <FrameLayout
+                        android:id="@+id/browser_views"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
+                        android:layout_height="match_parent" />
 
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/fullscreen_cancel"
-                            android:visibility="gone"
+                            android:layout_width="54dp"
+                            android:layout_height="36dp"
                             android:layout_alignParentRight="true"
                             android:layout_margin="4dp"
-                            android:textColor="@color/black"
-                            android:text="@string/fullscreen_cancel"
                             android:background="@drawable/select_button_gray"
-                            android:layout_width="54dp"
-                            android:layout_height="36dp" />
+                            android:text="@string/fullscreen_cancel"
+                            android:textColor="@color/black"
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </FrameLayout>
-
 
 
                 <include layout="@layout/search_interface" />
 
 
+                <LinearLayout
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@color/gray_extra_dark"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:weightSum="6">
 
 
+                    <TextView
 
+                        android:id="@+id/backward_action"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/backward"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/forward_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/forward"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/favorite_history_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/history"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/share_web_page_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/share_web_page_simple"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/fullscreen_action"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/full_screen"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/edit_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="@string/edit"
+                        android:textColor="@color/gray_lighter"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -254,7 +169,7 @@
             android:layout_gravity="center"
             android:background="@null"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="gone">
 
 
             <LinearLayout
@@ -262,53 +177,48 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
 
-                android:background="@color/gray_dark3"
                 android:layout_gravity="bottom"
-                android:orientation="vertical"
                 android:layout_marginBottom="54dp"
-                android:visibility="visible" >
+                android:background="@color/gray_dark3"
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:weightSum="4"
+                    android:layout_height="54dp"
                     android:orientation="horizontal"
-                    android:layout_height="54dp">
+                    android:weightSum="4">
+
                     <RelativeLayout
 
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:clickable="true" >
+                        android:clickable="true">
+
                         <Button
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
                             android:id="@+id/add_bookmark_btn"
-                            android:text="@string/action_add_bookmark"
-                            />
-
-
-                    </RelativeLayout>
-
-
-
-
-
-
-
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:clickable="true" >
-                        <Button
                             android:layout_width="fill_parent"
                             android:layout_height="54dp"
+                            android:text="@string/action_add_bookmark" />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true">
+
+                        <Button
                             android:id="@+id/history_btn"
-                            android:text="@string/history"
-                            />
+                            android:layout_width="fill_parent"
+                            android:layout_height="54dp"
+                            android:text="@string/history" />
 
 
                     </RelativeLayout>
@@ -320,13 +230,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:clickable="true" >
+                        android:clickable="true">
+
                         <Button
                             android:id="@+id/share_btn"
                             android:layout_width="fill_parent"
                             android:layout_height="54dp"
-                            android:text="@string/share"
-                            />
+                            android:text="@string/share" />
 
 
                     </RelativeLayout>
@@ -337,13 +247,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:clickable="true" >
+                        android:clickable="true">
+
                         <Button
                             android:id="@+id/edit_btn"
                             android:layout_width="fill_parent"
                             android:layout_height="54dp"
-                            android:text="@string/edit"
-                            />
+                            android:text="@string/edit" />
 
 
                     </RelativeLayout>
@@ -354,14 +264,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:visibility="gone"
-                        android:clickable="true" >
-                        <Button
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
+                        android:clickable="true"
+                        android:visibility="gone">
 
-                            android:text="@string/settings"
-                            android:id="@+id/settings_btn" />
+                        <Button
+                            android:id="@+id/settings_btn"
+                            android:layout_width="fill_parent"
+
+                            android:layout_height="54dp"
+                            android:text="@string/settings" />
 
 
                     </RelativeLayout>
@@ -369,23 +280,20 @@
                 </LinearLayout>
 
 
-
-
-
             </LinearLayout>
 
             <LinearLayout
 
                 android:id="@+id/browser_bottom_bar"
-                android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:layout_gravity="bottom"
+                android:background="@color/gray_dark2"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:visibility="gone"
 
-                android:background="@color/gray_dark2"
-                android:weightSum="5" >
+                android:visibility="gone"
+                android:weightSum="5">
 
                 <RelativeLayout
 
@@ -393,7 +301,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <ImageView
                         android:id="@+id/btn_back"
@@ -414,9 +322,10 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <ImageView
+                        android:id="@+id/btn_forward"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -425,8 +334,7 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:src="@drawable/ic_action_forward_dark"
-                        android:id="@+id/btn_forward" />
+                        android:src="@drawable/ic_action_forward_dark" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -435,7 +343,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -446,8 +354,7 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:src="@drawable/ic_action_plus_dark" >
-                    </ImageView>
+                        android:src="@drawable/ic_action_plus_dark"></ImageView>
                 </RelativeLayout>
 
 
@@ -457,8 +364,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:visibility="gone"
-                    android:clickable="true" >
+                    android:clickable="true"
+                    android:visibility="gone">
 
                     <TextView
 
@@ -470,9 +377,9 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:textSize="32sp"
+                        android:text="@string/multiply"
 
-                        android:text="@string/multiply" />
+                        android:textSize="32sp" />
                 </RelativeLayout>
 
 
@@ -482,7 +389,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <TextView
                         android:id="@+id/windows_text"
@@ -494,18 +401,18 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:textSize="20sp"
+                        android:text="1"
                         android:textColor="@color/white_light"
-                        android:text="1" >
-                    </TextView>
+                        android:textSize="20sp"></TextView>
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/action_settings"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <TextView
 
@@ -516,10 +423,9 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:textSize="20sp"
+                        android:text="···"
                         android:textColor="@color/white_light"
-                        android:text="···" >
-                    </TextView>
+                        android:textSize="20sp"></TextView>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -534,7 +440,7 @@
             android:layout_gravity="center"
             android:background="@color/black"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="gone">
 
 
             <FrameLayout
@@ -543,9 +449,9 @@
                 android:layout_height="fill_parent"
 
                 android:layout_gravity="top"
+                android:layout_marginBottom="0dp"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:layout_marginBottom="0dp"
 
                 android:visibility="visible" />
 
@@ -553,12 +459,12 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
                 android:layout_gravity="bottom"
                 android:background="@color/gray_dark2"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="5" >
+                android:weightSum="5">
 
                 <RelativeLayout
 
@@ -566,7 +472,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:clickable="true" >
+                    android:clickable="true">
 
 
                 </RelativeLayout>
@@ -577,7 +483,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:clickable="true" >
+                    android:clickable="true">
 
 
                 </RelativeLayout>
@@ -588,7 +494,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:clickable="true" >
+                    android:clickable="true">
 
 
                 </RelativeLayout>
@@ -599,8 +505,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/listBackground"
-                    android:visibility="gone"
-                    android:clickable="true" >
+                    android:clickable="true"
+                    android:visibility="gone">
 
                     <TextView
 
@@ -612,19 +518,20 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:textSize="16sp"
+                        android:text="@string/action_back"
                         android:textColor="@color/white_light"
-                        android:text="@string/action_back" >
+                        android:textSize="16sp">
 
                     </TextView>
                 </RelativeLayout>
+
                 <RelativeLayout
 
+                    android:id="@+id/clear_tab_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:id="@+id/clear_tab_btn"
-                    android:clickable="true" >
+                    android:clickable="true">
 
                     <TextView
 
@@ -636,10 +543,9 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:textSize="16sp"
-                        android:textColor="@color/white_light"
                         android:text="@string/clear_tab"
-                        />
+                        android:textColor="@color/white_light"
+                        android:textSize="16sp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -647,9 +553,8 @@
         </FrameLayout>
 
 
-
-
         <include layout="@layout/tab_drawer" />
+
         <include layout="@layout/bookmark_drawer" />
 
     </android.support.v4.widget.DrawerLayout>
