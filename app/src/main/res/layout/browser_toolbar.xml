@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/progressBackgroundColor" >
 
-        <com.youkes.browser.view.AnimatedProgressBar
+        <com.mlstudio.browser.view.AnimatedProgressBar
             android:id="@+id/progress_view"
             android:layout_width="match_parent"
             android:layout_height="2dp"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.youkes.browser.ui.CCPLayoutListenerView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mlstudio.browser.ui.CCPLayoutListenerView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ccp_content_fl"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -19,4 +19,4 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" />
 
-</com.youkes.browser.ui.CCPLayoutListenerView>
+</com.mlstudio.browser.ui.CCPLayoutListenerView>

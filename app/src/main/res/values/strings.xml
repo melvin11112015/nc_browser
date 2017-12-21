@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">优分享浏览器</string>
-    <string name="app_name_inner">优分享浏览器</string>
+    <string name="app_name">nc浏览器</string>
+    <string name="app_name_inner">nc浏览器</string>
 
     <string name="backward">后退</string>
     <string name="forward">前进</string>
@@ -23,7 +23,7 @@
     <string name="preview">预览</string>
     <string name="view">文章</string>
     <string name="setting_about_description">发现并分享</string>
-    <string name="all_rights_reserved">Copyright © 2016 优分享浏览器 All Rights Reserved. </string>
+    <string name="all_rights_reserved">Copyright © 2016 nc浏览器 All Rights Reserved. </string>
     <string name="app_server_view">登陆参数配置</string>
     <string name="app_server_config_error_tips">请先进行登陆参数配置</string>
     <string name="confirm_down">确定下载该文件?</string>
@@ -86,8 +86,8 @@
     <string name="nickname">昵称</string>
     <string name="nickname_hint">请输入昵称</string>
     <string name="fill_empty"></string>
-    <string name="youkes_number">优分享浏览器号:</string>
-    <string name="youkes_number_search">优分享浏览器号</string>
+    <string name="youkes_number">nc浏览器号:</string>
+    <string name="youkes_number_search">nc浏览器号</string>
     <string name="gender">性别</string>
     <string name="unknown">未知</string>
     <string name="sign">签名</string>
@@ -346,7 +346,7 @@
     <string name="app_panel_tackpic">拍照</string>
     <string name="app_panel_file">文件</string>
     <string name="fmt_time_length">%d\"</string>
-    <string name="login_account_hint">请输入优分享浏览器注册邮箱/手机</string>
+    <string name="login_account_hint">请输入nc浏览器注册邮箱/手机</string>
     <string name="login_please">请登录</string>
     <string name="login_password_hint">请输入密码</string>
     <string name="str_no_choice_account">还未选择子账号，请点选</string>
@@ -365,7 +365,7 @@
     <string name="tips_regist_1">"登陆<font color="#1DB87F">youkes.com</font>并注册"</string>
     <string name="tips_regist_2">填写注册基本资料</string>
     <string name="tips_regist_3">注册成功，获得8元测试体验费</string>
-    <string name="login_youkes">优分享浏览器登录</string>
+    <string name="login_youkes">nc浏览器登录</string>
     <string name="view_topic_circle">查看话题圈</string>
     <string name="select_topic_circle">选择话题圈</string>
     <string name="view_topic">查看话题</string>
@@ -670,7 +670,7 @@
     <string name="save_to_local">保存到手机</string>
     <string name="save_img_waite_download">请稍候，图片正在加载中</string>
     <string name="app_delete_tips">确认删除？</string>
-    <string name="app_test_message">"欢迎使用新版本IM，全新的通讯协议（http://www.youkes.com）[优分享浏览器]"</string>
+    <string name="app_test_message">"欢迎使用新版本IM，全新的通讯协议（http://www.youkes.com）[nc浏览器]"</string>
     <string name="conv_msg_sending">正在发送中</string>
     <string name="edit_add_contact_chat">输入联系人</string>
     <string name="invite_wating_replay">邀请成功，等待对方确认</string>
@@ -699,9 +699,9 @@
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
 
     <!-- browser -->
-    <string name="ApplicationName">优分享浏览器</string>
-    <string name="ApplicationNameUrl">优分享浏览器 - %s</string>
-    <string name="ApplicationDescription">使用优分享浏览器让你更好的使用互联网</string>
+    <string name="ApplicationName">nc浏览器</string>
+    <string name="ApplicationNameUrl">nc浏览器 - %s</string>
+    <string name="ApplicationDescription">使用nc浏览器让你更好的使用互联网</string>
     <string name="AboutActivity.Title">关于</string>
     <string name="AboutActivity.VersionText">Version:</string>
     <string name="AboutActivity.LicenseText">版权:</string>
@@ -722,7 +722,7 @@
     <string name="Main.ToastTabSwitchFullMessage">页 %1$s: %2$s</string>
     <string name="Main.VndErrorTitle">不能打开网址</string>
     <string name="Main.VndErrorMessage">您没有应用程序支持这个网址: %s.</string>
-    <string name="BookmarksListActivity.Title">优分享浏览器浏览器 - 书签</string>
+    <string name="BookmarksListActivity.Title">nc浏览器浏览器 - 书签</string>
     <string name="BookmarksListActivity.MenuSortMode">排序方式</string>
     <string name="BookmarksListActivity.MenuAddBookmark">添加书签</string>
     <string name="BookmarksListActivity.Empty">没有书签</string>
@@ -738,11 +738,11 @@
     <string name="HistoryListActivity.Title">历史</string>
     <string name="HistoryListActivity.MenuOpenInTab">打开新页</string>
     <string name="HistoryListActivity.MenuDelete">删除</string>
-    <string name="DownloadListActivity.Title">优分享浏览器浏览器-下载</string>
+    <string name="DownloadListActivity.Title">nc浏览器浏览器-下载</string>
     <string name="DownloadListActivity.Empty">没有下载</string>
     <string name="DownloadListActivity.Aborted">%s (取消)</string>
     <string name="DownloadListActivity.Finished">%s (完成)</string>
-    <string name="AdBlockerWhiteListActivity.Title">优分享浏览器浏览器 - 广告阻止的百名单</string>
+    <string name="AdBlockerWhiteListActivity.Title">nc浏览器浏览器 - 广告阻止的百名单</string>
     <string name="AdBlockerWhiteListActivity.Empty">白名单是空的.</string>
     <string name="AdBlockerWhiteListActivity.AddMessage">添加至白名单</string>
     <string name="AdBlockerWhiteListActivity.ClearMessage">清空白名单</string>
@@ -970,7 +970,7 @@
     <string name="Commons.SslIDMismatch">站点名和证书不匹配</string>
     <string name="Commons.SslExpired">证书已经过期</string>
     <string name="Commons.SslNotYetValid">证书没有验证</string>
-    <string name="MobileViewListActivity.Title">优分享浏览器浏览器-通过网关访问的网站列表</string>
+    <string name="MobileViewListActivity.Title">nc浏览器浏览器-通过网关访问的网站列表</string>
     <string name="MobileViewListActivity.ListEmpty">列表为空</string>
     <string name="MobileViewListActivity.AddMessage">添加一个网站</string>
     <string name="MobileViewListActivity.ClearMessage">清空所有站点</string>
@@ -1144,7 +1144,7 @@
     <string name="ProxySettings.ErrorProxyServerNotReachable">代理服务器不能访问.</string>
     <string name="ProxySettings.ErrorProxyInternetNotReachable">不能访问网络通过此代理服务器.</string>
     <string name="ProxySettings.ProxySettingsEnabled">成功启用了代理设置.</string>
-    <string name="AboutActivity.ContributorsText">优分享浏览器浏览器贡献者</string>
+    <string name="AboutActivity.ContributorsText">nc浏览器浏览器贡献者</string>
     <string name="PreferencesActivity.EnableRestoreLastPagePreferenceTitle">恢复选项卡</string>
     <string name="PreferencesActivity.EnableRestoreLastPagePreferenceSummary">如果选中，选项卡将会恢复如果可用.</string>
 
