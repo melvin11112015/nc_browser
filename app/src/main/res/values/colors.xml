@@ -12,7 +12,7 @@
     <color name="item_abstract_disabled">#ff929292</color>
     <item name="green_btn_text_color_disable" type="color">#cfdecf</item>
     <item name="green_btn_color_disable1" type="color">@color/ccp_green_alpha</item>
-    <color name="main_red">#ffcc3131</color>
+    <color name="main_red">#cc3131</color>
     <color name="default_text">#ff454545</color>
     <color name="link_color">#ff13679d</color>
     <color name="listview_item_normal">#eef0ed</color>
@@ -43,7 +43,7 @@
     <color name="white_btn_color_normal">#ebebeb</color>
     <color name="lightgray">#ffe3e3e3</color>
 
-    <color name="gray">#ff9a9b9c</color>
+    <color name="gray">#9a9b9c</color>
 
     <color name="white_light">#f2f2f2</color>
     <color name="circle_btn_color_normal">#ececec</color>

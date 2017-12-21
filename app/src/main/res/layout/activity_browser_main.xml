@@ -41,17 +41,24 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="20dp"
                         android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/fullscreen_cancel"
-                            android:layout_width="54dp"
-                            android:layout_height="36dp"
+                            style="@style/BaseButtonStyle"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_alignParentRight="true"
-                            android:layout_margin="4dp"
-                            android:background="@drawable/select_button_gray"
+                            android:layout_marginRight="5dp"
+                            android:alpha="0.5"
+                            android:gravity="center"
                             android:text="@string/fullscreen_cancel"
-                            android:textColor="@color/black"
+                            android:textColor="@color/gray_extra_dark"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            android:typeface="monospace"
                             android:visibility="gone" />
                     </RelativeLayout>
                 </FrameLayout>
@@ -68,8 +75,7 @@
                     android:background="@color/gray_extra_dark"
                     android:orientation="horizontal"
                     android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:weightSum="6">
+                    android:paddingTop="10dp">
 
 
                     <TextView
@@ -150,8 +156,9 @@
                         android:onClick="onClick"
                         android:text="@string/edit"
                         android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
-
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+                    <!--由于不确定编辑按钮的作用，将其隐藏 -->
 
                 </LinearLayout>
 

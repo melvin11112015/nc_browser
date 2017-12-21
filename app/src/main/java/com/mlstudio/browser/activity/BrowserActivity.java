@@ -434,6 +434,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private synchronized void initialize() {
 		setContentView(R.layout.activity_browser_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.browser_toolbar);
+		shortcutToolbar = findViewById(R.id.toolbar);
+
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 

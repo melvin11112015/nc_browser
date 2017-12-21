@@ -209,8 +209,8 @@
     <string name="topic_share_my">我的话题圈</string>
     <string name="browser_input_hint">搜索或输入网址</string>
     <string name="browser">浏览器</string>
-    <string name="browser_no_back">没有后退网页了</string>
-    <string name="browser_no_forward">没有前进网页了</string>
+    <string name="browser_no_back">已经是最后一页</string>
+    <string name="browser_no_forward">已经是最前一页</string>
     <string name="pubplatform">公共平台</string>
     <string name="pubnumber">定阅号</string>
     <string name="more">更多</string>
@@ -1193,7 +1193,7 @@
     <string name="search_page">搜索页</string>
     <string name="settingshelp">设置仅将应用于新标签页</string>
     <string name="fullscreen">启用全屏模式</string>
-    <string name="fullscreen_cancel">取消</string>
+    <string name="fullscreen_cancel">X</string>
     <string name="menu_screenner">目录筛选</string>
     <string name="tags_screenner">标签筛选</string>
     <string name="java">启用 JavaScript</string>
