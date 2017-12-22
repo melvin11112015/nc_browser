@@ -6,11 +6,11 @@
     android:layout_gravity="end"
     android:background="?attr/drawerBackground"
     android:clickable="true"
-    android:visibility="visible"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:visibility="visible">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/bookmark_title"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -22,28 +22,35 @@
             android:id="@+id/starIcon"
             android:layout_width="26dp"
             android:layout_height="26dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:contentDescription="Favicon"
+            android:layout_weight="1"
             android:gravity="center_vertical"
-            android:src="?attr/starDrawable" >
-        </ImageView>
+            android:src="?attr/starDrawable"></ImageView>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/starIcon"
-            android:fontFamily="sans-serif-light"
+            android:layout_weight="2"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:minHeight="?android:attr/listPreferredItemHeight"
             android:text="@string/action_bookmarks"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
+
+        <Button
+            android:id="@+id/favorite_history_action"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/voice_rcd_btn_nor"
+            android:onClick="onClick"
+            android:text="@string/history"
+            android:textColor="@color/gray_dark2" />
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
@@ -65,77 +72,20 @@
         android:layout_height="1dp"
         android:background="?attr/dividerColor" />
 
-    <LinearLayout
+
+    <ImageView
+        android:id="@+id/add_bookmark_action"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/dividerColor"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="3" >
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/action_new_tab"
+        android:onClick="onClick"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:src="?attr/plusDrawable"></ImageView>
 
-        <RelativeLayout
-            android:id="@+id/action_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="invisible"
-            android:background="?attr/listBackground"
-            android:clickable="true" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/action_back"
-                android:paddingBottom="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
-                android:src="?attr/arrowBackDrawable" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/add_bookmark_action"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/listBackground"
-            android:clickable="true" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/action_new_tab"
-                android:paddingBottom="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
-                android:src="?attr/plusDrawable" >
-            </ImageView>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/action_forward"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="invisible"
-            android:background="?attr/listBackground"
-            android:clickable="true" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/action_forward"
-                android:paddingBottom="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
-                android:src="?attr/arrowForwardDrawable" />
-        </RelativeLayout>
-    </LinearLayout>
 
 
 </LinearLayout>

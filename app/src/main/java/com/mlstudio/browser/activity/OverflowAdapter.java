@@ -62,7 +62,7 @@ public class OverflowAdapter extends CommAdapter {
             setViewPadding(parent, R.drawable.common_popup_menu_item);
         } else {
             textView.setTextColor(mHelper.getDisabledColor());
-            setViewPadding(parent, R.drawable.transparent);
+            setViewPadding(parent, android.R.drawable.screen_background_light_transparent);
         }
     }
 

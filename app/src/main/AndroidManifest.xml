@@ -33,12 +33,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="56c3061067e58e16c4001be3" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="youkes_browser_qq" />
 
         <activity
             android:name="com.mlstudio.browser.activity.BrowserMainActivity"

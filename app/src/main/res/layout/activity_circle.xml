@@ -50,7 +50,6 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateBehavior="repeat"
-        android:indeterminateDrawable="@drawable/common_loading4"
         android:visibility="gone" />
 
 

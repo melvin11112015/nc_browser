@@ -384,6 +384,7 @@ this.webViewAction=action;
 			mSettings.setLayoutAlgorithm(LayoutAlgorithm.NORMAL);
 		}
 
+
 		mSettings.setBlockNetworkImage(mPreferences.getBlockImagesEnabled());
 		mSettings.setSupportMultipleWindows(mPreferences.getPopupsEnabled());
 		mSettings.setUseWideViewPort(mPreferences.getUseWideViewportEnabled());
@@ -464,7 +465,7 @@ this.webViewAction=action;
 		settings.setDatabaseEnabled(true);
 		settings.setSupportZoom(true);
 		settings.setBuiltInZoomControls(true);
-		settings.setDisplayZoomControls(false);
+		settings.setDisplayZoomControls(true);
 		settings.setAllowContentAccess(true);
 		settings.setAllowFileAccess(true);
 		settings.setDefaultTextEncodingName("utf-8");
