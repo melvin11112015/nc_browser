@@ -118,7 +118,6 @@ import com.mlstudio.browser.view.HtmlPage;
 import com.mlstudio.browser.view.LightningView;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1602,8 +1601,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		super.onPause();
 		Log.d(Constants.TAG, "onPause");
 
-		MobclickAgent.onPageEnd(this.getClass().getName());
-		MobclickAgent.onPause(this);
 
 		if (getCurrentWebView() != null) {
 			getCurrentWebView().pauseTimers();
@@ -1681,8 +1678,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MobclickAgent.onPageStart(this.getClass().getName());
-		MobclickAgent.onResume(this);
+
 		Log.d(Constants.TAG, "onResume");
 		if (mSearchAdapter != null) {
 			mSearchAdapter.refreshPreferences();

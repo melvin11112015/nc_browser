@@ -20,7 +20,6 @@ import com.mlstudio.browser.ApiAction;
 import com.mlstudio.browser.R;
 import com.mlstudio.browser.ui.TopBarView;
 import com.mlstudio.browser.utils.LogUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -54,7 +53,6 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//PushAgent.getInstance(this).onAppStart();
-		MobclickAgent.openActivityDurationTrack(false);
 
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -176,8 +174,6 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		MobclickAgent.onPageEnd(this.getClass().getName());
-		MobclickAgent.onPause(this);
 
 
 		mBaseActivity.onPause();
@@ -189,9 +185,6 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 		// HSCoreService
 		super.onResume();
 
-		MobclickAgent.onPageStart(this.getClass().getName());
-
-		MobclickAgent.onResume(this);
 
 
 		mBaseActivity.onResume();
