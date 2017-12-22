@@ -502,6 +502,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		setNavigationDrawerWidth();
 		mDrawerLayout.setDrawerListener(new DrawerLocker());
 
+		// 关闭手势滑动
+		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
 		mWebpageBitmap = Utils.getWebpageBitmap(getResources(), mDarkTheme);
 
 		mHomepage = mPreferences.getHomepage();
@@ -3303,6 +3306,12 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			case R.id.fullscreen_action:
 				setFullscreen(true);
 				break;
+			case R.id.left_drawer_action:
+				mDrawerLayout.openDrawer(mDrawerLeft);
+				break;
+			case R.id.right_drawer_action:
+				mDrawerLayout.openDrawer(mDrawerRight);
+				break;
 
 			case R.id.fullscreen_cancel:
 				fullscreenCancel();
@@ -3645,24 +3654,24 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		@Override
 		public void onDrawerClosed(View v) {
-
+/*
 			if (v == mDrawerRight) {
 				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerLeft);
 			} else {
 				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawerRight);
 			}
-
+*/
 		}
 
 		@Override
 		public void onDrawerOpened(View v) {
-
+/*
 			if (v == mDrawerRight) {
 				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerLeft);
 			} else {
 				mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawerRight);
 			}
-
+*/
 		}
 
 		@Override
