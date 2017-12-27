@@ -111,8 +111,7 @@ public class AppMenuActivity extends AppBaseActivity implements OnClickListener 
 	}
 
 	public ArrayList<String> getMenuList() {
-		ArrayList<String> menus = new ArrayList<>();
-		return menus;
+		return new ArrayList<>();
 	}
 
 	protected void onMenuClick(int position) {

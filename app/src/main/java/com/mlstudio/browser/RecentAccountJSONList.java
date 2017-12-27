@@ -29,22 +29,22 @@ public class RecentAccountJSONList {
 
     public static String convertJSONString(ArrayList<RecentAccountJSON> list) {
 
-        String result="[";
+        StringBuilder result = new StringBuilder("[");
         for(int i=0;i<list.size();i++) {
             RecentAccountJSON json = list.get(i);
-            result += "{";
-            result += "'userId':'" + json.getUserId() + "',";
-            result += "'accessKey':'" + json.getAccessKey() + "',";
-            result += "'name':'" + json.getName() + "',";
-            result += "'photo':'" + json.getPhoto() + "'";
-            result += "}";
+            result.append("{");
+            result.append("'userId':'").append(json.getUserId()).append("',");
+            result.append("'accessKey':'").append(json.getAccessKey()).append("',");
+            result.append("'name':'").append(json.getName()).append("',");
+            result.append("'photo':'").append(json.getPhoto()).append("'");
+            result.append("}");
             if(i<list.size()-1){
-                result += ",";
+                result.append(",");
             }
 
         }
-        result+="]";
-        return result;
+        result.append("]");
+        return result.toString();
     }
 
     public static boolean isContainUserId(ArrayList<RecentAccountJSON> list,String userId) {

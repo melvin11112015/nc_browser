@@ -26,13 +26,12 @@ public class SiteHotListFragment extends Fragment {
 
 	protected SwipeRefreshLayout swipeLayout;
     TextView emptyView = null;
-    HashMap<String, String> queryMap = new HashMap<String, String>();
-    boolean loadFinished = false;
+	HashMap<String, String> queryMap = new HashMap<>();
+	boolean loadFinished = false;
     int pageIdx = 0;
     boolean searching = false;
     private SwipeListView listView = null;
     private SiteListItemAdapter listAdapter = null;
-    private String type = "";
     private String queryTag = "";
 
     public SiteHotListFragment() {
@@ -205,9 +204,8 @@ public class SiteHotListFragment extends Fragment {
 	public SiteHotListItem getItem(int position) {
 		int hcnt = listView.getHeaderViewsCount();
 
-        SiteHotListItem item = listAdapter.getItem(position - hcnt);
-        return item;
-    }
+		return listAdapter.getItem(position - hcnt);
+	}
 
 	public void search(String text) {
 		// pageIdx = 0;
@@ -235,7 +233,7 @@ public class SiteHotListFragment extends Fragment {
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		String type1 = type;
 	}
 
 	public void setQueryTag(String queryTag) {

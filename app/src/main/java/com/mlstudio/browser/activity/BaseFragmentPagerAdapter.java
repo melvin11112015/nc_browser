@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     private final FragmentManager fm;
-    private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+    private ArrayList<Fragment> fragments = new ArrayList<>();
 
     public BaseFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -73,8 +73,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
         if (fragments.size() <= position) {
             position = position % fragments.size();
         }
-        Object obj = super.instantiateItem(container, position);
-        return obj;
+        return super.instantiateItem(container, position);
     }
 
     public void append(Fragment fragment) {

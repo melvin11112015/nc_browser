@@ -6,9 +6,9 @@
     android:layout_gravity="start"
     android:background="?attr/drawerBackground"
     android:clickable="true"
-    android:visibility="visible"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +36,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/plusIcon"
-            android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:minHeight="?android:attr/listPreferredItemHeight"
@@ -45,7 +44,6 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/view"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="?attr/dividerColor" />
@@ -61,7 +59,6 @@
         android:listSelector="?attr/listBackground" />
 
     <View
-        android:id="@+id/lineView"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="?attr/dividerColor" />

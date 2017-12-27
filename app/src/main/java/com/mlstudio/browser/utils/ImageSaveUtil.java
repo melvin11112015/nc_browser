@@ -111,8 +111,6 @@ public class ImageSaveUtil {
 		if(downImgUrl.indexOf("http://")==0||downImgUrl.indexOf("https://")==0){
 			new SaveImage(downImgUrl).execute();
 			return;
-		}else{
-
 		}
 	}
 

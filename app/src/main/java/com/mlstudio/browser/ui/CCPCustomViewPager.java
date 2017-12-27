@@ -52,19 +52,13 @@ public class CCPCustomViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
 
-        if(!mSlidenabled) {
-            return false;
-        }
-        return super.onInterceptTouchEvent(arg0);
+        return mSlidenabled && super.onInterceptTouchEvent(arg0);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
 
-        if(!mSlidenabled) {
-            return false;
-        }
-        return super.onTouchEvent(arg0);
+        return mSlidenabled && super.onTouchEvent(arg0);
     }
 
 }

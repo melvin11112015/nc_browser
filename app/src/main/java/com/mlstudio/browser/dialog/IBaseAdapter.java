@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public abstract class IBaseAdapter<T> extends BaseAdapter {
     public IBaseAdapter(Context ctx) {
         mContext = ctx;
         mLayoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        data = new ArrayList<T>();
+        data = new ArrayList<>();
     }
 
     public IBaseAdapter(Context ctx ,List<T> data) {
@@ -82,9 +83,7 @@ public abstract class IBaseAdapter<T> extends BaseAdapter {
         if(ts == null || ts.length == 0) {
             return ;
         }
-        for(int i = 0 ; i < ts.length ; i++) {
-            data.add(ts[i]);
-        }
+        Collections.addAll(data, ts);
         if(!mNotifyOnChange) {
             return ;
         }

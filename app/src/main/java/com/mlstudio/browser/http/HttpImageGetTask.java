@@ -39,8 +39,7 @@ public class HttpImageGetTask extends AsyncTask<String, Void, Bitmap> {
 			connection.setDoInput(true);
 			connection.connect();
 			InputStream input = connection.getInputStream();
-			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			return myBitmap;
+			return BitmapFactory.decodeStream(input);
 
 		} catch (IOException e) {
 			return null;

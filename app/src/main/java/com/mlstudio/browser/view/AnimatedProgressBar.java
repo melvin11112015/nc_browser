@@ -72,6 +72,7 @@ public class AnimatedProgressBar extends LinearLayout {
         }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
         inflater.inflate(R.layout.animated_progress_bar, this, true);
 
 

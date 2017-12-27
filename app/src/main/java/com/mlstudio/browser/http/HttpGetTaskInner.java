@@ -82,11 +82,10 @@ public class HttpGetTaskInner extends AsyncTask<String, Void, String> {
 	        //Log.d(DEBUG_TAG, "The response is: " + response);
 	        is = conn.getInputStream();
 	        //len=conn.getContentLength();
-	       
-	        String contentAsString = readIt(is, len);
-	        return contentAsString;
-	        
-	    // Makes sure that the InputStream is closed after the app is
+
+            return readIt(is, len);
+
+            // Makes sure that the InputStream is closed after the app is
 	    // finished using it.
 	    }catch(IOException e){
 			e.printStackTrace();

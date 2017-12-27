@@ -9,11 +9,9 @@ import com.mlstudio.browser.preference.PreferenceManager;
 
 public abstract class ThemableActivity extends AppCompatActivity {
 
-	private boolean mDark;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		mDark = PreferenceManager.getInstance().getUseDarkTheme();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        boolean mDark = PreferenceManager.getInstance().getUseDarkTheme();
 
 		// set the theme
 		if (mDark) {

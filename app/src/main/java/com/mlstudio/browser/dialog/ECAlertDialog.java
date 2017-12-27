@@ -16,7 +16,6 @@ import com.mlstudio.browser.R;
 import com.mlstudio.browser.utils.LogUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -148,7 +147,7 @@ public class ECAlertDialog extends Dialog implements View.OnClickListener {
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setAttributes(layoutParams);
-        mButtons = new ArrayList<Button>();
+        mButtons = new ArrayList<>();
         Button leftBtn = findViewById(R.id.dilaog_button1);
         leftBtn.setOnClickListener(this);
         mButtons.add(leftBtn);
@@ -355,10 +354,8 @@ public class ECAlertDialog extends Dialog implements View.OnClickListener {
 
         int i = 0;
         Button btn = null;
-        Iterator<Button> iterator = mButtons.iterator();
-        while (iterator.hasNext()) {
-            Button button = iterator.next();
-            if(button.getVisibility() != View.VISIBLE) {
+        for (Button button : mButtons) {
+            if (button.getVisibility() != View.VISIBLE) {
                 continue;
             }
             ++i;

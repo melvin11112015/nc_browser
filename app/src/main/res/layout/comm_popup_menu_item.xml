@@ -20,8 +20,9 @@
     android:minWidth="@dimen/popup_menu_item_width"
     android:orientation="horizontal"
     android:paddingBottom="4.0dip"
+    android:paddingEnd="38.0dip"
     android:paddingRight="38.0dip"
-    android:paddingTop="4.0dip" >
+    android:paddingTop="4.0dip">
 
     <ImageView
         android:id="@+id/popup_menu_item_left_image"
@@ -29,8 +30,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="@dimen/popup_menu_image_margin_bottom"
+        android:layout_marginEnd="@dimen/popup_menu_image_margin_right"
         android:layout_marginLeft="@dimen/popup_menu_image_margin_left"
         android:layout_marginRight="@dimen/popup_menu_image_margin_right"
+        android:layout_marginStart="@dimen/popup_menu_image_margin_left"
         android:layout_marginTop="@dimen/popup_menu_image_margin_top" />
 
     <TextView
@@ -48,6 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5.0dip"
+        android:layout_marginStart="5.0dip"
         android:src="@drawable/icon_update_point" />
 
 </LinearLayout>

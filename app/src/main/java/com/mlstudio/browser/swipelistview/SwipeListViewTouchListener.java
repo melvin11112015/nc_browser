@@ -3,7 +3,6 @@
 package com.mlstudio.browser.swipelistview;
 
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
@@ -61,7 +60,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
     private SwipeListView swipeListView;
     private int viewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
-    private List<PendingDismissData> pendingDismisses = new ArrayList<PendingDismissData>();
+    private List<PendingDismissData> pendingDismisses = new ArrayList<>();
     private int dismissAnimationRefCount = 0;
 
     private float downX;
@@ -79,10 +78,10 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
     private int swipeActionLeft = SwipeListView.SWIPE_ACTION_REVEAL;
     private int swipeActionRight = SwipeListView.SWIPE_ACTION_REVEAL;
 
-    private List<Boolean> opened = new ArrayList<Boolean>();
-    private List<Boolean> openedRight = new ArrayList<Boolean>();
+    private List<Boolean> opened = new ArrayList<>();
+    private List<Boolean> openedRight = new ArrayList<>();
     private boolean listViewMoving;
-    private List<Boolean> checked = new ArrayList<Boolean>();
+    private List<Boolean> checked = new ArrayList<>();
     private int oldSwipeActionRight;
     private int oldSwipeActionLeft;
 
@@ -332,9 +331,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             swipeListView.onChoiceEnded();
             returnOldActions();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            swipeListView.setItemChecked(position, !lastChecked);
-        }
+        swipeListView.setItemChecked(position, !lastChecked);
         swipeListView.onChoiceChanged(position, !lastChecked);
         reloadChoiceStateInView(frontView, position);
     }
@@ -418,7 +415,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      * @return
      */
     protected List<Integer> getPositionsSelected() {
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for (int i = 0; i < checked.size(); i++) {
             if (checked.get(i)) {
                 list.add(i);
@@ -759,10 +756,8 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                     Log.d("SwipeListView", "swapRight: " + swapRight + " - swipingRight: " + swipingRight);
                     if (swapRight != swipingRight && swipeActionLeft != swipeActionRight) {
                         swap = false;
-                    } else if (opened.get(downPosition) && openedRight.get(downPosition) && swapRight) {
-                        swap = false;
                     } else
-                        swap = !(opened.get(downPosition) && !openedRight.get(downPosition) && !swapRight);
+                        swap = !(opened.get(downPosition) && openedRight.get(downPosition) && swapRight) && !(opened.get(downPosition) && !openedRight.get(downPosition) && !swapRight);
                 } else if (Math.abs(deltaX) > viewWidth / 2) {
                     swap = true;
                     swapRight = deltaX > 0;

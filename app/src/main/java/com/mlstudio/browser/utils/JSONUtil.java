@@ -36,8 +36,8 @@ public class JSONUtil {
 
 	public static ArrayList<String> getArrayStrList(JSONObject docObj,
 			String name) {
-		ArrayList<String> list = new ArrayList<String>();
-		if (docObj.has(name)) {
+        ArrayList<String> list = new ArrayList<>();
+        if (docObj.has(name)) {
 			JSONArray json;
 			try {
 				json = docObj.getJSONArray(name);
@@ -215,9 +215,8 @@ public class JSONUtil {
 		if (docObj.has(name)) {
 			try {
 				long t = docObj.getLong(name);
-				Date date = new Date(t);
-				return date;
-			} catch (JSONException e) {
+                return new Date(t);
+            } catch (JSONException e) {
 
 			}
 		}
@@ -248,8 +247,8 @@ public class JSONUtil {
 			return null;
 		}
 
-		ArrayList<String> list=new ArrayList<String>();
-		JSONArray json;
+        ArrayList<String> list = new ArrayList<>();
+        JSONArray json;
 		try {
 			json = new JSONArray(docStr);
 

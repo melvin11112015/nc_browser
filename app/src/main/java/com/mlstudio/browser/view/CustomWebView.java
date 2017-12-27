@@ -45,11 +45,6 @@ public class CustomWebView extends WebView {
 
 	}
 
-	private void enterTextSelection() {
-		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1)
-			return;
-
-	}
 
 	// this will over ride the default action bar on long press
 	@Override

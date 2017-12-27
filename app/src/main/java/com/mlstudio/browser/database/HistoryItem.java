@@ -135,10 +135,7 @@ public class HistoryItem implements Comparable<HistoryItem> {
 		if (mImageId != that.mImageId) {
 			return false;
 		}
-		if (mBitmap != null ? !mBitmap.equals(that.mBitmap) : that.mBitmap != null) {
-			return false;
-		}
-		return mTitle.equals(that.mTitle) && mUrl.equals(that.mUrl);
+		return (mBitmap != null ? mBitmap.equals(that.mBitmap) : that.mBitmap == null) && mTitle.equals(that.mTitle) && mUrl.equals(that.mUrl);
 	}
 
 	@Override

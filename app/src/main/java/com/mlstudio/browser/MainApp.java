@@ -30,9 +30,6 @@ public class MainApp extends Application {
      * @return
      */
     public static MainApp getInstance() {
-        if (instance == null) {
-
-        }
         return instance;
     }
 
@@ -118,8 +115,8 @@ public class MainApp extends Application {
         } else {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
                 }
@@ -167,9 +164,8 @@ public class MainApp extends Application {
         try {
             ApplicationInfo appInfo = getPackageManager().getApplicationInfo(
                     getPackageName(), PackageManager.GET_META_DATA);
-            boolean b = appInfo.metaData.getBoolean("LOGGING");
 
-            return b;
+            return appInfo.metaData.getBoolean("LOGGING");
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

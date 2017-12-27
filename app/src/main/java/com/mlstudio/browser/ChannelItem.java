@@ -18,8 +18,8 @@ public class ChannelItem implements Serializable {
         this.siteId=siteId;
         this.id = id;
         this.name = name;
-        this.orderId = Integer.valueOf(orderId);
-        this.selected = Integer.valueOf(selected);
+        this.orderId = orderId;
+        this.selected = selected;
     }
 
     public String getId() {
@@ -39,11 +39,11 @@ public class ChannelItem implements Serializable {
     }
 
     public int getOrderId() {
-        return this.orderId.intValue();
+        return this.orderId;
     }
 
     public void setOrderId(int paramInt) {
-        this.orderId = Integer.valueOf(paramInt);
+        this.orderId = paramInt;
     }
 
     public Integer getSelected() {

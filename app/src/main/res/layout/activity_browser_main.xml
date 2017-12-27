@@ -9,183 +9,172 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
-            android:id="@+id/main_layout"
+            android:id="@+id/ui_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@null"
-
+            android:layout_marginBottom="0dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ui_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0dp"
-                android:orientation="vertical">
+            <include layout="@layout/browser_toolbar" />
 
-                <include layout="@layout/browser_toolbar" />
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
 
                 <FrameLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:id="@+id/browser_views"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
 
-                    <FrameLayout
-                        android:id="@+id/browser_views"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="20dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/fullscreen_cancel"
-                            style="@style/BaseButtonStyle"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="5dp"
-                            android:alpha="0.5"
-                            android:gravity="center"
-                            android:text="@string/fullscreen_cancel"
-                            android:textColor="@color/gray_extra_dark"
-                            android:textSize="26sp"
-                            android:textStyle="bold"
-                            android:typeface="monospace"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-                </FrameLayout>
-
-
-                <include layout="@layout/search_interface" />
-
-
-                <LinearLayout
-                    android:id="@+id/toolbar"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@color/gray_extra_dark"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
 
-
-                    <TextView
-
-                        android:id="@+id/backward_action"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
+                    <Button
+                        android:id="@+id/fullscreen_cancel"
+                        style="@style/BaseButtonStyle"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:alpha="0.5"
                         android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/backward"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
-
-
-                    <TextView
-                        android:id="@+id/forward_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/forward"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/history"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp"
+                        android:text="@string/fullscreen_cancel"
+                        android:textColor="@color/gray_extra_dark"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:typeface="monospace"
                         android:visibility="gone" />
+                </RelativeLayout>
+            </FrameLayout>
 
 
-                    <TextView
-                        android:id="@+id/share_web_page_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/share_web_page_simple"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
+            <include layout="@layout/search_interface" />
 
 
-                    <TextView
-                        android:id="@+id/left_drawer_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/tabs"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/right_drawer_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/browser_bookmark"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/fullscreen_action"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/full_screen"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/gray_extra_dark"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
 
 
-                    <TextView
-                        android:id="@+id/edit_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/edit"
-                        android:textColor="@color/gray_lighter"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-                    <!--由于不确定编辑按钮的作用，将其隐藏 -->
+                <TextView
 
-                </LinearLayout>
+                    android:id="@+id/backward_action"
+                    android:layout_width="wrap_content"
 
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/backward"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/forward_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/forward"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/history"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/share_web_page_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/share_web_page_simple"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/left_drawer_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/tabs"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/right_drawer_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/browser_bookmark"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/fullscreen_action"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/full_screen"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/edit_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/edit"
+                    android:textColor="@color/gray_lighter"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+                <!--由于不确定编辑按钮的作用，将其隐藏 -->
 
             </LinearLayout>
 
@@ -193,9 +182,8 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/bottom_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
             android:layout_gravity="center"
             android:background="@null"
@@ -205,110 +193,46 @@
 
             <LinearLayout
                 android:id="@+id/setting_panel"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
 
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="54dp"
-                android:background="@color/gray_dark3"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
+                <Button
+                    android:id="@+id/add_bookmark_btn"
+                    android:layout_width="wrap_content"
                     android:layout_height="54dp"
-                    android:orientation="horizontal"
-                    android:weightSum="4">
+                    android:layout_weight="1"
+                    android:text="@string/action_add_bookmark" />
 
-                    <RelativeLayout
+                <Button
+                    android:id="@+id/history_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:text="@string/history" />
 
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                <Button
+                    android:id="@+id/share_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:text="@string/share" />
 
-                        android:clickable="true">
+                <Button
+                    android:id="@+id/edit_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:text="@string/edit" />
 
-                        <Button
-                            android:id="@+id/add_bookmark_btn"
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
-                            android:text="@string/action_add_bookmark" />
+                <Button
+                    android:id="@+id/settings_btn"
+                    android:layout_width="wrap_content"
 
-
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:clickable="true">
-
-                        <Button
-                            android:id="@+id/history_btn"
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
-                            android:text="@string/history" />
-
-
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-
-                        android:clickable="true">
-
-                        <Button
-                            android:id="@+id/share_btn"
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
-                            android:text="@string/share" />
-
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-
-                        android:clickable="true">
-
-                        <Button
-                            android:id="@+id/edit_btn"
-                            android:layout_width="fill_parent"
-                            android:layout_height="54dp"
-                            android:text="@string/edit" />
-
-
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:visibility="gone">
-
-                        <Button
-                            android:id="@+id/settings_btn"
-                            android:layout_width="fill_parent"
-
-                            android:layout_height="54dp"
-                            android:text="@string/settings" />
-
-
-                    </RelativeLayout>
-
-                </LinearLayout>
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:text="@string/settings" />
 
 
             </LinearLayout>
@@ -385,7 +309,8 @@
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:paddingTop="4dp"
-                        android:src="@drawable/ic_action_plus_dark"></ImageView>
+                        android:src="@drawable/ic_action_plus_dark" />
+
                 </RelativeLayout>
 
 
@@ -434,7 +359,7 @@
                         android:paddingTop="4dp"
                         android:text="1"
                         android:textColor="@color/white_light"
-                        android:textSize="20sp"></TextView>
+                        android:textSize="20sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -456,7 +381,7 @@
                         android:paddingTop="4dp"
                         android:text="···"
                         android:textColor="@color/white_light"
-                        android:textSize="20sp"></TextView>
+                        android:textSize="20sp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -474,18 +399,6 @@
             android:visibility="gone">
 
 
-            <FrameLayout
-                android:id="@+id/tabs_container"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-
-                android:layout_gravity="top"
-                android:layout_marginBottom="0dp"
-                android:background="@color/white"
-                android:orientation="horizontal"
-
-                android:visibility="visible" />
-
             <LinearLayout
 
                 android:layout_width="match_parent"
@@ -496,39 +409,6 @@
                 android:orientation="horizontal"
                 android:visibility="gone"
                 android:weightSum="5">
-
-                <RelativeLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-
-                    android:clickable="true">
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-
-                    android:clickable="true">
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-
-                    android:clickable="true">
-
-
-                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/action_tab_close"

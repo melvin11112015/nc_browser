@@ -37,11 +37,6 @@ public abstract class CCPActivityBase {
      * CCPActivity root view
      */
     private View mContentView;
-    private LayoutInflater mLayoutInflater;
-    /**
-     * CCPActivity root View container
-     */
-    private FrameLayout mContentFrameLayout;
     /**
      * Manager dialog.
      */
@@ -51,7 +46,6 @@ public abstract class CCPActivityBase {
      */
     private int mMusicMaxVolume;
     private View mBaseLayoutView;
-    private View mTransLayerView;
     /**
      * The client mute, do not accept message Notification
      */
@@ -74,11 +68,14 @@ public abstract class CCPActivityBase {
         mMusicMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
         int layoutId = getLayoutId();
-        mLayoutInflater = LayoutInflater.from(mActionBarActivity);
+        LayoutInflater mLayoutInflater = LayoutInflater.from(mActionBarActivity);
         mBaseLayoutView = mLayoutInflater.inflate(R.layout.ccp_activity, null);
-        mTransLayerView = mBaseLayoutView.findViewById(R.id.ccp_trans_layer);
+        View mTransLayerView = mBaseLayoutView.findViewById(R.id.ccp_trans_layer);
         LinearLayout mRootView = mBaseLayoutView.findViewById(R.id.ccp_root_view);
-        mContentFrameLayout = mBaseLayoutView.findViewById(R.id.ccp_content_fl);
+        /*
+      CCPActivity root View container
+     */
+        FrameLayout mContentFrameLayout = mBaseLayoutView.findViewById(R.id.ccp_content_fl);
 
         if(getTitleLayout() != -1) {
             mTopBarView = mLayoutInflater.inflate(getTitleLayout() , null);
@@ -139,11 +136,8 @@ public abstract class CCPActivityBase {
      */
     public final boolean isTitleShowing() {
         LogUtil.d(LogUtil.getLogUtilsTag(AppBaseActivity.class), "isTitleShowing hasTitle :" + (mTopBarView != null));
-        if(mTopBarView == null) {
-            return  false;
-        }
+        return mTopBarView != null && mTopBarView.getVisibility() == View.VISIBLE;
 
-        return mTopBarView.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -432,7 +426,7 @@ public abstract class CCPActivityBase {
         }
 
         if(mAppDialogCache == null) {
-            mAppDialogCache = new ArrayList<Dialog>();
+            mAppDialogCache = new ArrayList<>();
         }
         mAppDialogCache.add(dialog);
     }

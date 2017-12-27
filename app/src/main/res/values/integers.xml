@@ -12,6 +12,5 @@
    be found in the AUTHORS file in the root of the source tree.
  -->
 <resources>
-    <integer name="activity_trans_duration">300</integer>
     <integer name="min_exit_scroll_factor">25</integer>
 </resources>

@@ -24,10 +24,9 @@ public class ImageUtil {
 			connection.setDoInput(true);
 			connection.connect();
 			InputStream input = connection.getInputStream();
-			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			return myBitmap;
-			
-		} catch (IOException e) {
+            return BitmapFactory.decodeStream(input);
+
+        } catch (IOException e) {
 			return null;
 		}
 
@@ -172,9 +171,9 @@ public class ImageUtil {
 
 	public static ArrayList<String> processImageDisplayUrl(
 			ArrayList<String> imgs) {
-			ArrayList<String> ret=new ArrayList<String>();
-			
-		for(int i=0;i<imgs.size();i++){
+        ArrayList<String> ret = new ArrayList<>();
+
+        for(int i=0;i<imgs.size();i++){
 			String img=imgs.get(i);
 			if(img.indexOf("http")==0){
 				ret.add(img);

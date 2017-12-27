@@ -19,7 +19,7 @@ public class UserHistoryListItemAdapter extends BaseAdapter {
 
 	public UserHistoryListItemAdapter(Activity activity){
 		this.activity=activity;
-		this.list=new ArrayList<HistoryItem>();
+		this.list = new ArrayList<>();
 	}
 
 
@@ -63,9 +63,7 @@ public class UserHistoryListItemAdapter extends BaseAdapter {
 
 
 		HistoryItem oldItem = holder.getItem();
-		if (oldItem != null && oldItem.getUrl().equals(item.getUrl())) {
-
-		} else {
+		if (!(oldItem != null && oldItem.getUrl().equals(item.getUrl()))) {
 			holder.setItem(item);
 		}
 
@@ -79,9 +77,7 @@ public class UserHistoryListItemAdapter extends BaseAdapter {
 
 	public void addList(ArrayList<HistoryItem> slist) {
 
-		for(HistoryItem item:slist){
-			list.add(item);
-		}
+		list.addAll(slist);
 
 	}
 

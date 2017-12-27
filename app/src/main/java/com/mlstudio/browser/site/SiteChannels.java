@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by xuming on 2016/2/17.
  */
 public class SiteChannels {
-        public static ArrayList<ChannelItem> channels= new ArrayList<ChannelItem>();
+    public static ArrayList<ChannelItem> channels = new ArrayList<>();
         static {
 
             channels.add(new ChannelItem("","1", "历史", 1, 1));

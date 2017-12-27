@@ -32,7 +32,6 @@ public class ActivityTaskUtils {
         }
 
         List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(100);
-        StringBuffer buffer = new StringBuffer();
         for(ActivityManager.RunningTaskInfo info : runningTasks) {
             if(!info.baseActivity.getClassName().startsWith(packageName) && !info.topActivity.getClassName().startsWith(packageName)) {
                 continue;
@@ -46,6 +45,6 @@ public class ActivityTaskUtils {
             String.format("{id:%d num:%d/%d top:%s base:%s}", args);
         }
 
-        return buffer.toString();
+        return "";
     }
 }

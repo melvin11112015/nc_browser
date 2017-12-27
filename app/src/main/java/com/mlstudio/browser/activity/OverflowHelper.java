@@ -21,33 +21,8 @@ import com.mlstudio.browser.utils.DensityUtil;
  */
 public class OverflowHelper {
 
-    private Context mContext;
     /**菜单承载区域View*/
     private PopupWindow mPopupWindow;
-    private final View.OnKeyListener mOnKeyListener
-            = new View.OnKeyListener() {
-
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() != KeyEvent.ACTION_DOWN) {
-                return false;
-            }
-            dismiss();
-            return true;
-        }
-
-    };
-    private final View.OnTouchListener mOnTouchListener
-            = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            dismiss();
-            return false;
-        }
-    };
-    /**菜单选项*/
-    private LinearLayout mPopupLayout;
     /**下拉菜单显示区域*/
     private PopupMenuListView mListView;
     /**下拉菜单数据适配器*/
@@ -57,19 +32,40 @@ public class OverflowHelper {
     private int mDisabledColor;
 
     public OverflowHelper(Context ctx) {
-        mContext = ctx;
+        Context mContext = ctx;
         mNormalColor = mContext.getResources().getColor(R.color.white);
         mDisabledColor = mContext.getResources().getColor(R.color.text_disabled);
-        mPopupLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.comm_popup_menu, null, true);
+        /*菜单选项*/
+        LinearLayout mPopupLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.comm_popup_menu, null, true);
         mListView = mPopupLayout.findViewById(R.id.comm_popup_list);
         mAdapter = new OverflowAdapter(this, ctx);
         mListView.setAdapter(mAdapter);
+        View.OnKeyListener mOnKeyListener = new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                }
+                dismiss();
+                return true;
+            }
+
+        };
         mListView.setOnKeyListener(mOnKeyListener);
         mPopupWindow = new PopupWindow(mPopupLayout, -2, -2, true);
         mPopupWindow.setContentView(mPopupLayout);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setWidth(414);
+        View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dismiss();
+                return false;
+            }
+        };
         mPopupWindow.getContentView().setOnTouchListener(mOnTouchListener);
         mPopupWindow.update();
     }

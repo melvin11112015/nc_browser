@@ -44,9 +44,8 @@ public class BitmapUtil {
 			if (!f.exists()) {
 				return null;
 			}
-			Bitmap tmp = BitmapFactory.decodeFile(filename);
 			// tmp = setExifInfo(filename, tmp);
-			return tmp;
+			return BitmapFactory.decodeFile(filename);
 		} catch (Exception e) {
 			return null;
 		}
@@ -84,8 +83,6 @@ public class BitmapUtil {
 			image.compress(Bitmap.CompressFormat.JPEG, 60, baos);
 		} else if (size > 1024 * 128) {
 			image.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-		} else {
-
 		}
 
 		return baos.toByteArray();
@@ -99,8 +96,7 @@ public class BitmapUtil {
 		if (!adjustOritation) {
 			return loadBitmap(imgpath);
 		} else {
-			Bitmap bm = loadBitmap(imgpath);
-			return bm;// setExifInfo(imgpath, bm);
+			return loadBitmap(imgpath);// setExifInfo(imgpath, bm);
 		}
 	}
 
@@ -266,9 +262,8 @@ public class BitmapUtil {
 		// 缩放图片动作
 		matrix.postScale((float) scaleWidth, (float) scaleHeight);
 
-		Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+		return Bitmap.createBitmap(bitmap, 0, 0,
 				bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-		return resizedBitmap;
 	}
 
 	private static int calculateInSampleSize(int width, int height,
@@ -446,9 +441,8 @@ public class BitmapUtil {
             options -= 10;// 每次都减少10
         }
         ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
-        // bitmap.
-        return bitmap;
+		// bitmap.
+		return BitmapFactory.decodeStream(isBm, null, null);
 
     }
 

@@ -9,19 +9,18 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
 	public static String substringBetween(String html, String head, String tail) {
-		String str = html.substring(html.indexOf(head), html.indexOf(tail));
-		return str;
+		return html.substring(html.indexOf(head), html.indexOf(tail));
 	}
 
 	public static String toArrayStr(ArrayList<String> arr) {
-		String str = "[";
+		StringBuilder str = new StringBuilder("[");
 		if(arr!=null) {
 			for (int i = 0; i < arr.size(); i++) {
-				str += "'" + arr.get(i) + "',";
+				str.append("'").append(arr.get(i)).append("',");
 			}
 		}
-		str += "]";
-		return str;
+		str.append("]");
+		return str.toString();
 	}
 
 	public static ArrayList<String> fromArrayStr(String str) {
@@ -123,9 +122,8 @@ public class StringUtils {
 
 		char c = str.charAt(0);
 		return (!Character.isLetter(c) || Character.isUpperCase(c)) ? str
-				: new StringBuilder(str.length())
-						.append(Character.toUpperCase(c))
-						.append(str.substring(1)).toString();
+				: String.valueOf(Character.toUpperCase(c)) +
+				str.substring(1);
 	}
 
 	/**
@@ -304,8 +302,8 @@ public class StringUtils {
 
 	public static String toString(String[] arr) {
 		String str = "[";
-		for (int i = 0; i < arr.length; i++) {
-			str += "'" + arr[i] + "',";
+		for (String anArr : arr) {
+			str += "'" + anArr + "',";
 		}
 		str += "]";
 		return str;
@@ -324,9 +322,11 @@ public class StringUtils {
 			if(!StringUtils.isEmpty(list1[0])) {
 				str = list1[0];
 			}else {
+				StringBuilder strBuilder = new StringBuilder(str);
 				for (int i = 0; i < len - 1; i++) {
-					str += list1[i];
+					strBuilder.append(list1[i]);
 				}
+				str = strBuilder.toString();
 			}
 		}
 
@@ -393,14 +393,14 @@ public class StringUtils {
 	}
 
 	public static String getBytesNumberText(int cnt) {
-		if(cnt>1024*1024*1){
+		if (cnt > 1024 * 1024) {
 			double c=(double)cnt*10.0/(double)(1024*1024);
 			int f=(int)Math.round(c);
 			double d=f/10.0;
 			return d+"MB";
 		}
 
-		if(cnt>1024*1){
+		if (cnt > 1024) {
 			double c=(double)cnt*10.0/(double)(1024);
 			int f=(int)Math.round(c);
 			double d=f/10.0;

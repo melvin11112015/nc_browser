@@ -8,9 +8,10 @@ import com.mlstudio.browser.MainApp;
 
 public class ToastUtil {
 
+    private static final Object synObj = new Object();
     private static Handler handler = new Handler(Looper.getMainLooper());
     private static Toast toast = null;
-    private static Object synObj = new Object();
+
     public static void showMessage(final String msg) {
         showMessage(msg, Toast.LENGTH_SHORT);
     }

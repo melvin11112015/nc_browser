@@ -25,8 +25,8 @@ public class HttpUploadTaskInner extends AsyncTask<String, Void, String> {
 							   InputStream f) {
 		this.listener = listener;
 
-		this.params = new ArrayList<NameValuePair>();
-		for (NameValuePair n : params) {
+        this.params = new ArrayList<>();
+        for (NameValuePair n : params) {
 			String v = n.getValue();
 			if (v != null && !v.equals("")) {
 				this.params.add(n);

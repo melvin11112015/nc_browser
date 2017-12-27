@@ -9,7 +9,6 @@ import com.mlstudio.browser.utils.URLUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +17,11 @@ public class HttpGetTask {
 
 
 	private static ArrayList<NameValuePair> getNameValueList(HashMap<String, String> queryMap) {
-		ArrayList<NameValuePair> list=new ArrayList<NameValuePair>();
-		Iterator iter = queryMap.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		ArrayList<NameValuePair> list = new ArrayList<>();
+		for (Object o : queryMap.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 			try {
-				list.add(new NameValuePair((String)entry.getKey(),(String)entry.getValue()));
+				list.add(new NameValuePair((String) entry.getKey(), (String) entry.getValue()));
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -42,7 +40,7 @@ public class HttpGetTask {
 
 	public static void execute(OnTaskCompleted listener,List<NameValuePair> paramsInput,String url){
 
-		ArrayList<NameValuePair> params=new ArrayList<NameValuePair>();
+		ArrayList<NameValuePair> params = new ArrayList<>();
 		if(paramsInput!=null) {
 			for (NameValuePair n : paramsInput) {
 				String v = n.getValue();

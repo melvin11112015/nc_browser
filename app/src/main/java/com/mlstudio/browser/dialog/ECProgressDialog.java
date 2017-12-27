@@ -14,17 +14,6 @@ public class ECProgressDialog extends Dialog {
 
     //private View mImageView;
     AsyncTask mAsyncTask;
-    private final OnCancelListener mCancelListener
-            = new OnCancelListener() {
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            if(mAsyncTask != null) {
-                mAsyncTask.cancel(true);
-            }
-        }
-
-    };
     private TextView mTextView;
 
     /**
@@ -37,7 +26,17 @@ public class ECProgressDialog extends Dialog {
         setContentView(R.layout.loading_box);
         mTextView = findViewById(R.id.dialogText);
         mTextView.setText(R.string.loading_press);
-        
+
+        OnCancelListener mCancelListener = new OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (mAsyncTask != null) {
+                    mAsyncTask.cancel(true);
+                }
+            }
+
+        };
         setOnCancelListener(mCancelListener);
     }
 

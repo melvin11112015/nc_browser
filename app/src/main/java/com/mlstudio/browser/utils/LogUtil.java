@@ -1,5 +1,6 @@
 package com.mlstudio.browser.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.mlstudio.browser.file.FileAccessor;
@@ -108,7 +109,7 @@ public class LogUtil {
 	public static void setState(boolean flag) {
 		if (flag) {
 			if (logList == null) {
-				logList = new ArrayList<String>();
+				logList = new ArrayList<>();
 			} else {
 				logList.clear();
 			}
@@ -198,7 +199,7 @@ public class LogUtil {
 	}
 
 	public static void printErrorStackTrace(Exception ex) {
-		File f = new File("/sdcard/Hisun/error.log");
+		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/error.log");
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -209,7 +210,7 @@ public class LogUtil {
 		}
 	}
 
-	public static String getLogUtilsTag(Class<? extends Object> clazz) {
+	public static String getLogUtilsTag(Class<?> clazz) {
 		return LogUtil.TAG + "." + clazz.getSimpleName();
 	}
 }

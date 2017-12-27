@@ -18,8 +18,8 @@ public class SiteListItemAdapter extends BaseAdapter {
 
 	public SiteListItemAdapter(Activity activity){
 		this.activity=activity;
-		this.list=new ArrayList<SiteHotListItem>();
-	}
+        this.list = new ArrayList<>();
+    }
 
 
 	@Override
@@ -62,10 +62,8 @@ public class SiteListItemAdapter extends BaseAdapter {
 
 
 		SiteHotListItem oldItem = holder.getItem();
-		if (oldItem != null && oldItem.get_id().equals(item.get_id())) {
-
-		} else {
-			holder.setItem(item);
+        if (!(oldItem != null && oldItem.get_id().equals(item.get_id()))) {
+            holder.setItem(item);
 		}
 
 
@@ -78,9 +76,7 @@ public class SiteListItemAdapter extends BaseAdapter {
 
 	public void addList(ArrayList<SiteHotListItem> slist) {
 
-		for(SiteHotListItem item:slist){
-			list.add(item);
-		}
+        list.addAll(slist);
 
 	}
 

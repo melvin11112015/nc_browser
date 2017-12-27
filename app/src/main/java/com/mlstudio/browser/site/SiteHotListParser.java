@@ -9,8 +9,8 @@ public class SiteHotListParser {
 	
 	public static ArrayList<SiteHotListItem> parse(String jsonstr)
 	{
-		ArrayList<SiteHotListItem> list=new ArrayList<SiteHotListItem>();
-	    try{
+        ArrayList<SiteHotListItem> list = new ArrayList<>();
+        try{
 	        JSONObject jsonResult=new JSONObject(jsonstr);
 			if(jsonResult.has("api")){
 				if("/error/network".equals(jsonResult.getString("api"))){

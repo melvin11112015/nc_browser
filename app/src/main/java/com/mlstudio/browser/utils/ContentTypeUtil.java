@@ -12,7 +12,7 @@ public class ContentTypeUtil {
     private static final Map<String, String> extMap;
 
     static {
-        mimeMap=new HashMap<String, String>();
+        mimeMap = new HashMap<>();
         mimeMap.put("jpg","image/jpeg");
         mimeMap.put("gif","image/gif");
         mimeMap.put("bmp","image/bmp");
@@ -21,7 +21,7 @@ public class ContentTypeUtil {
     }
 
     static {
-        extMap=new HashMap<String, String>();
+        extMap = new HashMap<>();
 
 
         extMap.put("image/jpeg", ".jpg");
@@ -70,8 +70,7 @@ public class ContentTypeUtil {
             return "";
         }
 
-        String ext = extMap.get(contentType);
-        return ext;
+        return extMap.get(contentType);
 
 
     }

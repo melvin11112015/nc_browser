@@ -29,12 +29,11 @@ public class UserHistoryListFragment extends Fragment {
 
 	protected SwipeRefreshLayout swipeLayout;
     TextView emptyView = null;
-    HashMap<String, String> queryMap = new HashMap<String, String>();
-    boolean loadFinished = false;
+	HashMap<String, String> queryMap = new HashMap<>();
+	boolean loadFinished = false;
     int pageIdx = 0;
     private SwipeListView listView = null;
     private UserHistoryListItemAdapter listAdapter = null;
-    private String type = "";
 
 	public UserHistoryListFragment() {
 
@@ -202,12 +201,11 @@ public class UserHistoryListFragment extends Fragment {
 	public HistoryItem getItem(int position) {
 		int hcnt = listView.getHeaderViewsCount();
 
-        HistoryItem item = listAdapter.getItem(position - hcnt);
-        return item;
-    }
+		return listAdapter.getItem(position - hcnt);
+	}
 
 	public void setType(String type) {
-		this.type = type;
+		String type1 = type;
 	}
 
 

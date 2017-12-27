@@ -138,8 +138,7 @@ public class PreferenceUtils {
 		String UserName= settings.getString(userId+":"+PreferenceConstants.UserName, "");
 		String UserSign= settings.getString(userId+":"+PreferenceConstants.UserSign, "");
 		String UserPhoto= settings.getString(userId+":"+PreferenceConstants.UserPhoto, "");
-		AccountInfo info=new AccountInfo(userId,accessKey,chatId,chatPwd,UserName,"",UserSign,UserPhoto,"");
-		return info;
+		return new AccountInfo(userId, accessKey, chatId, chatPwd, UserName, "", UserSign, UserPhoto, "");
 	}
 
 
@@ -196,13 +195,12 @@ public class PreferenceUtils {
     }
 
 	public static String getUploadId() {
-		String s=getUserPrefStr(PreferenceConstants.UploadId);
-		return s;
+		return getUserPrefStr(PreferenceConstants.UploadId);
 	}
 
 	public static void setAnonymous() {
 		String s = getUserId();
-		if (s.indexOf("Anonymous") >= 0) {
+		if (s.contains("Anonymous")) {
 			return;
 		}
 		String userId = "Anonymous_" + RandomUtil.secureRandomString();
@@ -216,16 +214,13 @@ public class PreferenceUtils {
 	}
 
 	public static boolean isUserVisitor() {
-		String userId=getUserId();
-		if(StringUtils.isEmpty(userId)){
+		String userId = getUserId();
+		if (StringUtils.isEmpty(userId)) {
 			return true;
 		}
-		String accessKey=getAccessKey();
-		if(StringUtils.isEmpty(accessKey)){
-			return true;
-		}
-        return userId.indexOf("Anonymous_") >= 0;
-    }
+		String accessKey = getAccessKey();
+		return StringUtils.isEmpty(accessKey) || userId.indexOf("Anonymous_") >= 0;
+	}
 
 	public static boolean isBookmarkInited(){
 		return getUserPrefBool(PreferenceConstants.BookmarkInited);

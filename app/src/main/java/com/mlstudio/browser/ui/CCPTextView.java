@@ -81,10 +81,7 @@ public class CCPTextView extends TextView {
 
 		if(action == MotionEvent.ACTION_UP && mIgnoreNextActionUp) {
 			LogUtil.d(LogUtil.getLogUtilsTag(getClass()), "ignore Action Up Event this time");
-			if(!result) {
-				return super.onTouchEvent(event);
-			}
-			return true;
+			return result || super.onTouchEvent(event);
 		}
 		return super.onTouchEvent(event);
 	}

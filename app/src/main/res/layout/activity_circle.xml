@@ -42,7 +42,6 @@
         android:visibility="gone" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
         android:layout_width="16dip"
         android:layout_height="16dip"
         android:layout_centerHorizontal="true"

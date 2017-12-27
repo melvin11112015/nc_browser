@@ -115,7 +115,7 @@ import com.mlstudio.browser.utils.ToastUtil;
 import com.mlstudio.browser.utils.Utils;
 import com.mlstudio.browser.view.AnimatedProgressBar;
 import com.mlstudio.browser.view.HtmlPage;
-import com.mlstudio.browser.view.LightningView;
+import com.mlstudio.browser.view.MyWebView;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
 
@@ -151,8 +151,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private static final int OPEN_FILE_CHOOSER_ACTIVITY = 2;
 	private static final int Open_Url = 4;
 	// List
-	private final List<LightningView> mWebViews = new ArrayList<>();
-	//private LightningView getCurrentWebView();
+	private final List<MyWebView> mWebViews = new ArrayList<>();
+	//private MyWebView getCurrentWebView();
 	private final ColorDrawable mBackground = new ColorDrawable();
 	protected boolean isFinished = false;
 	GestureDetector detector = null;
@@ -214,9 +214,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private Bitmap mDefaultVideoPoster, mWebpageBitmap;
 	private Drawable mDeleteIcon, mRefreshIcon, mCopyIcon, mIcon;
 	private DrawerArrowDrawable mArrowDrawable;
-	// Helper
-	private boolean mI2PHelperBound;
-	private boolean mI2PProxyInitialized;
 	private GestureDetector.OnGestureListener gestureListener=new GestureDetector.OnGestureListener() {
 		@Override
 		public boolean onDown(MotionEvent e) {
@@ -247,7 +244,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		public void onLongPress(MotionEvent e) {
 
 
-			LightningView w=getCurrentWebView();
+			MyWebView w = getCurrentWebView();
 			BrowserActivity.this.onLongPress();
 		}
 
@@ -407,7 +404,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	@Override
 	public void onScrollChanged() {
-		LightningView webview = getCurrentWebView();
+		MyWebView webview = getCurrentWebView();
 		if (webview == null) {
 			return;
 		}
@@ -419,7 +416,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	void runRefreshWebPage() {
-		LightningView webview = getCurrentWebView();
+		MyWebView webview = getCurrentWebView();
 		if (webview != null) {
 			webview.reload();
 		}
@@ -519,6 +516,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		mHistoryDatabase = HistoryDatabase.getInstance(getApplicationContext());
 
 		// set display options of the ActionBar
+		assert actionBar != null;
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
@@ -679,59 +677,13 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		final boolean orbotInstalled = false;
 		boolean orbotChecked = mPreferences.getCheckedForTor();
-		boolean orbot = orbotInstalled && !orbotChecked;
+		boolean orbot = false;
 
 		boolean i2pInstalled = false;
 		boolean i2pChecked = mPreferences.getCheckedForI2P();
-		boolean i2p = i2pInstalled && !i2pChecked;
+		boolean i2p = false;
 
 		// TODO Is the idea to show this per-session, or only once?
-		if (!useProxy && (orbot || i2p)) {
-			if (orbot) mPreferences.setCheckedForTor(true);
-			if (i2p) mPreferences.setCheckedForI2P(true);
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-			if (orbotInstalled && i2pInstalled) {
-				String[] proxyChoices = this.getResources().getStringArray(R.array.proxy_choices_array);
-				builder.setTitle(getResources().getString(R.string.http_proxy))
-						.setSingleChoiceItems(proxyChoices, mPreferences.getProxyChoice(),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										mPreferences.setProxyChoice(which);
-									}
-								})
-						.setNeutralButton(getResources().getString(R.string.action_ok),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										if (mPreferences.getUseProxy())
-											initializeProxy();
-									}
-								});
-			} else {
-				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-							case DialogInterface.BUTTON_POSITIVE:
-								mPreferences.setProxyChoice(orbotInstalled ?
-										Constants.PROXY_ORBOT : Constants.PROXY_I2P);
-								initializeProxy();
-								break;
-							case DialogInterface.BUTTON_NEGATIVE:
-								mPreferences.setProxyChoice(Constants.NO_PROXY);
-								break;
-						}
-					}
-				};
-
-				builder.setMessage(orbotInstalled ? R.string.use_tor_prompt : R.string.use_i2p_prompt)
-						.setPositiveButton(R.string.yes, dialogClickListener)
-						.setNegativeButton(R.string.no, dialogClickListener);
-			}
-			builder.show();
-		}
 	}
 
 	/*
@@ -757,12 +709,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			default:
 				host = mPreferences.getProxyHost();
 				port = mPreferences.getProxyPort();
-		}
-
-		try {
-
-		} catch (Exception e) {
-			Log.d(Constants.TAG, "error enabling web proxying", e);
 		}
 
 	}
@@ -858,7 +804,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 
 		if(selectTabIndex>=0&&selectTabIndex<mWebViews.size()) {
-			LightningView lv0 = mWebViews.get(selectTabIndex);
+			MyWebView lv0 = mWebViews.get(selectTabIndex);
 			if(url!=null) {
 				lv0.loadUrl(url);
 			}
@@ -884,7 +830,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private void openSearchTab() {
 		//ToastUtil.showMessage("type:opensearch");
 		newTab(null,true);
-		LightningView v=getCurrentWebView();
+		MyWebView v = getCurrentWebView();
 		if(v!=null) {
 			//openBookmarkPage(v.getWebView());
 		}
@@ -902,7 +848,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		mFullScreen = mPreferences.getFullScreenEnabled();
 		mColorMode = mPreferences.getColorModeEnabled();
 		mColorMode &= !mDarkTheme;
-		LightningView wv=getCurrentWebView();
+		MyWebView wv = getCurrentWebView();
 		if (!isIncognito() && !mColorMode && !mDarkTheme && mWebpageBitmap != null) {
 			changeToolbarBackground(mWebpageBitmap);
 		} else if (!isIncognito() && wv != null && !mDarkTheme
@@ -938,13 +884,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		updateCookiePreference();
 		if (mPreferences.getUseProxy()) {
 			initializeProxy();
-		} else {
-			try {
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			mI2PProxyInitialized = false;
 		}
 	}
 
@@ -990,7 +929,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 
 
-		for(LightningView v:mWebViews){
+		for (MyWebView v : mWebViews) {
 
 				if (v != null) {
 					v.onDestroy();
@@ -1036,7 +975,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	private void showSearchInterfaceBar(String text) {
 
-		LightningView wv=getCurrentWebView();
+		MyWebView wv = getCurrentWebView();
 		if(wv==null){
 			return;
 		}
@@ -1086,9 +1025,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	private void closeOtherTabs(int position) {
-		if(mWebViews==null){
-			return;
-		}
 		int tabCnt=mWebViews.size();
 		if (position >= tabCnt) {
 			position=0;
@@ -1114,9 +1050,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-	protected LightningView getLightningView(View v){
+	protected MyWebView getLightningView(View v) {
 		for(int i=0;i<mWebViews.size();i++){
-			LightningView lv=mWebViews.get(i);
+			MyWebView lv = mWebViews.get(i);
 			if(lv!=null&&lv.getWebView()==v){
 				return lv;
 			}
@@ -1125,13 +1061,13 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	/**
-	 * displays the WebView contained in the LightningView Also handles the
+	 * displays the WebView contained in the MyWebView Also handles the
 	 * removal of previous views
 	 *
 	 * @param view
-	 *            the LightningView to show
+	 *            the MyWebView to show
 	 */
-	private synchronized void showTab(LightningView view) {
+	private synchronized void showTab(MyWebView view) {
 
 		if (view == null) {
 			return;
@@ -1142,7 +1078,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		mBrowserFrame.setBackgroundColor(mBackgroundColor);
 
 
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		if (lv != null) {
 			lv.setForegroundTab(false);
 			lv.onPause();
@@ -1214,7 +1150,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			//ToastUtil.showMessage("this type "+type);
 		}
 		if (num == 1) {
-			LightningView lv=getCurrentWebView();
+			MyWebView lv = getCurrentWebView();
 			lv.loadUrl(url);
 		} else if (url != null) {
 			if (url.startsWith(Constants.FILE)) {
@@ -1228,14 +1164,14 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	@Override
 	public void closeEmptyTab() {
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		if (lv != null && lv.getWebView().copyBackForwardList().getSize() == 0) {
 			closeCurrentTab();
 		}
 	}
 
 	private void closeCurrentTab() {
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		//ToastUtil.showMessage("close current tab");
 		// don't delete the tab because the browser will close and mess stuff up
 		if(mDrawerLeft!=null) {
@@ -1253,8 +1189,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-	ArrayList<LightningView> copyWebviewList(){
-		ArrayList<LightningView> tmpList=new ArrayList<LightningView>();
+	ArrayList<MyWebView> copyWebviewList() {
+		ArrayList<MyWebView> tmpList = new ArrayList<>();
 		for(int i=0;i<mWebViews.size();i++){
 			tmpList.add(i,mWebViews.get(i));
 		}
@@ -1263,11 +1199,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	void closeAllTab(){
 		int s=mWebViews.size();
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 
 
 		for (int i=0;i<s;i++){
-			LightningView reference = mWebViews.get(i);
+			MyWebView reference = mWebViews.get(i);
 			if(reference!=null&&reference!=lv) {
 				reference.onDestroy();
 			}
@@ -1286,7 +1222,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	public void onTrimMemory(int level) {
 		if (level > TRIM_MEMORY_MODERATE && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 			Log.d(Constants.TAG, "Low Memory, Free Memory");
-			for (LightningView view : mWebViews) {
+			for (MyWebView view : mWebViews) {
 				view.getWebView().freeMemory();
 			}
 		}
@@ -1301,7 +1237,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			return false;
 		}
 		mIsNewIntent = false;
-		LightningView startingTab = new LightningView(mActivity, url, mDarkTheme);
+		MyWebView startingTab = new MyWebView(mActivity, url, mDarkTheme);
 		startingTab.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -1315,14 +1251,14 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		startingTab.getWebView().getViewTreeObserver().addOnScrollChangedListener(this);
 
-		startingTab.setWebViewAction(new LightningView.WebViewAction() {
+		startingTab.setWebViewAction(new MyWebView.WebViewAction() {
 			@Override
-			public void OnLinkClicked(LightningView v, String url) {
+			public void OnLinkClicked(MyWebView v, String url) {
 				showTab(v);
 			}
 
 			@Override
-			public void OnBackClicked(LightningView v, String url) {
+			public void OnBackClicked(MyWebView v, String url) {
 				showTab(v);
 			}
 
@@ -1347,7 +1283,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			}
 		}
 
-		LightningView curview=getCurrentWebView();
+		MyWebView curview = getCurrentWebView();
 		if(curview!=null) {
 			//MobclickAgent.onPageEnd(this.getClass().getName() + ":" +curview.getUrl());
 		}
@@ -1361,9 +1297,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	int getSelectedTabIndex(){
 
 
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		for(int i=0;i<mWebViews.size();i++){
-			LightningView v=mWebViews.get(i);
+			MyWebView v = mWebViews.get(i);
 			if(v==lv){
 				return i;
 			}
@@ -1372,9 +1308,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-	int getTabIndex(LightningView lv){
+	int getTabIndex(MyWebView lv) {
 		for(int i=0;i<mWebViews.size();i++){
-			LightningView v=mWebViews.get(i);
+			MyWebView v = mWebViews.get(i);
 			if(v==lv){
 				return i;
 			}
@@ -1382,12 +1318,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		return 0;
 	}
 
-	public LightningView getCurrentWebView(){
+	public MyWebView getCurrentWebView() {
 		if(mBrowserFrame==null||mBrowserFrame.getChildCount()!=1){
 			return null;
 		}
-		LightningView lv=getLightningView(mBrowserFrame.getChildAt(0));
-		return lv;
+		return getLightningView(mBrowserFrame.getChildAt(0));
 	}
 
 	void onWebViewTouchUp(MotionEvent event){
@@ -1401,14 +1336,14 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			return;
 		}
 		if(mWebViews.size()<=1){
-			//LightningView lv=getCurrentWebView();
+			//MyWebView lv=getCurrentWebView();
 			//openBookmarkPage(lv.getWebView());
 			ToastUtil.showMessage(getString(R.string.last_tab_not_close));
 			return;
 		}
 
 		int current = getSelectedTabIndex();
-		LightningView reference = mWebViews.get(position);
+		MyWebView reference = mWebViews.get(position);
 		if (reference == null) {
 			return;
 		}
@@ -1531,11 +1466,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			WebIconDatabase.getInstance().removeAllIcons();
 		}
 		if (mSystemBrowser) {
-			try {
+			/*try {
 				//Browser.
 				//Browser.clearHistory(getContentResolver());
 			} catch (NullPointerException ignored) {
-			}
+			}*/
 		}
 		Utils.trimCache(this);
 	}
@@ -1610,11 +1545,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	public void saveOpenTabs() {
 		if (mPreferences.getRestoreLostTabsEnabled()) {
-			String s = "";
+			StringBuilder s = new StringBuilder();
 
 			for (int n = 0; n < mWebViews.size(); n++) {
 				if (mWebViews.get(n).getUrl() != null) {
-					s = s + mWebViews.get(n).getUrl() + "|$|SEPARATOR|$|";
+					s.append(mWebViews.get(n).getUrl()).append("|$|SEPARATOR|$|");
 				}
 			}
 
@@ -1622,16 +1557,14 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			//only restore current url
 
 			if(getCurrentWebView()!=null) {
-				//LightningView lv=getCurrentWebView();
+				//MyWebView lv=getCurrentWebView();
 				int selectedIndex=getSelectedTabIndex();
 				//s = s + getCurrentWebView().getUrl() + "|$|SEPARATOR|$|";
 				mPreferences.setSelectedIndex(selectedIndex);
 			}
 
 
-
-
-			mPreferences.setMemoryUrl(s);
+			mPreferences.setMemoryUrl(s.toString());
 		}
 
 		saveWebViewScreenShots();
@@ -1640,7 +1573,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private void saveWebViewScreenShots() {
 		for (int n = 0; n < mWebViews.size(); n++) {
 			if (mWebViews.get(n).getUrl() != null) {
-				LightningView view=mWebViews.get(n);
+				MyWebView view = mWebViews.get(n);
 
 				view.saveScreenShot(n);
 
@@ -1653,7 +1586,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	protected void onStop() {
 		super.onStop();
 
-		mI2PHelperBound = false;
+		boolean mI2PHelperBound = false;
 	}
 
 	@Override
@@ -1693,13 +1626,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			notifyBookmarkDataSetChanged();
 		}
 		initializePreferences();
-		if (mWebViews != null) {
-			for (int n = 0; n < mWebViews.size(); n++) {
-				if (mWebViews.get(n) != null) {
-					mWebViews.get(n).initializePreferences(this);
-				} else {
-					mWebViews.remove(n);
-				}
+		for (int n = 0; n < mWebViews.size(); n++) {
+			if (mWebViews.get(n) != null) {
+				mWebViews.get(n).initializePreferences(this);
+			} else {
+				mWebViews.remove(n);
 			}
 		}
 
@@ -1771,7 +1702,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			return;
 		}
 
-		if(url!=null&&!url.equals("")) {
+		if (!url.equals("")) {
 			mSearch.setText(url);
 		}
 
@@ -1810,9 +1741,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		if(ServerConfig.isSearchUrl(url)){
 			mSearch.setText(ServerConfig.getSearchWord(url));
-		}else{
-
-
 		}
 	}
 
@@ -1830,7 +1758,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 		mProgressBar.setProgress(n);
 
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		if(!lv.canGoBack()){
 			((ImageView)findViewById(R.id.btn_back)).setImageResource(R.drawable.ic_action_back);
 		}else{
@@ -1854,11 +1782,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			@Override
 			public void run() {
 				if (isSystemBrowserAvailable() && mPreferences.getSyncHistoryEnabled()) {
-					try {
+					/*try {
 
 						//Browser.updateVisitedHistory(getContentResolver(), url, true);
 					} catch (NullPointerException ignored) {
-					}
+					}*/
 				}
 				try {
 					if (mHistoryDatabase == null) {
@@ -1887,26 +1815,18 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		Cursor c = null;
 		String[] columns = new String[] { "url", "title" };
 		boolean browserFlag;
-		try {
+		/*try {
 
 			//Uri bookmarks = Browser.BOOKMARKS_URI;
 			//c = getContentResolver().query(bookmarks, columns, null, null, null);
 		} catch (SQLiteException | IllegalStateException | NullPointerException e) {
 			e.printStackTrace();
-		}
+		}*/
 
-		if (c != null) {
-			Log.d("Browser", "System Browser Available");
-			browserFlag = true;
-		} else {
-			Log.e("Browser", "System Browser Unavailable");
-			browserFlag = false;
-		}
-		if (c != null) {
-			c.close();
-		}
-		mPreferences.setSystemBrowserPresent(browserFlag);
-		return browserFlag;
+		Log.e("Browser", "System Browser Unavailable");
+		browserFlag = false;
+		mPreferences.setSystemBrowserPresent(false);
+		return false;
 	}
 
 	/**
@@ -2433,12 +2353,12 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	public void longClickPage(final String url) {
 		HitTestResult result = null;
 
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 
 		if(lv==null){
 			return;
 		}
-		if(lv.getUrl().indexOf("http")<0){
+		if (!lv.getUrl().contains("http")) {
 			longClickPageFiles(url);
 			return;
 		}
@@ -2488,7 +2408,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		File bookmarkWebPage = new File(mActivity.getFilesDir(), BookmarkPage.FILENAME);
 		String bookmarkUrl=Constants.FILE + bookmarkWebPage.toString();
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		if(lv==null){
 			return;
 		}
@@ -2507,7 +2427,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	void openBookmarkUrlLongClick(final String url){
-		LightningView lv = getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		HitTestResult result = lv.getWebView().getHitTestResult();
 		if (url != null) {
 			onBookmarkLongClick(url);
@@ -2521,7 +2441,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	void openHistoryUrlLongClick(final String url){
-		LightningView lv = getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		HitTestResult result = lv.getWebView().getHitTestResult();
 		if (url != null) {
 			onHistoryLongClick(url);
@@ -2811,8 +2731,6 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private ECListDialog getLinkShareMenuDialog() {
 		if(PreferenceUtils.isUserVisitor()){
 			return getImageMenuDialogSocial();
-		}else {
-
 		}
 
 		if(linkShareMenuDlg!=null){
@@ -2853,7 +2771,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		if(PreferenceUtils.isUserVisitor()){
 			return getVisitorImageDialog();
 		}
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		String url=lv.getUrl();
 		if(LinkUtils.getLinkType(url)== LinkType.Type_Goods){
 			return getImageMenuDialogGoods();
@@ -3400,12 +3318,11 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private void startEditActivity() {
 
 
-
-		LightningView lv=getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		final String url = lv.getUrl();
 		final String title = lv.getWebTitle();
 
-		lv.parsePage(new LightningView.HtmlPageParseListener() {
+		lv.parsePage(new MyWebView.HtmlPageParseListener() {
 			@Override
 			public void OnHtmlPageParsed(HtmlPage page) {
 				onStartEditHtmlPage(page);
@@ -3421,7 +3338,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	private void shareWebLink() {
-		LightningView lv = getCurrentWebView();
+		MyWebView lv = getCurrentWebView();
 		if (lv == null) {
 			return;
 		}
@@ -3436,7 +3353,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	}
 
 	private  void addCurrentUrlToBookmark(){
-		LightningView mCurrentView=getCurrentWebView();
+		MyWebView mCurrentView = getCurrentWebView();
 		if (!mCurrentView.getUrl().startsWith(Constants.FILE)) {
 			HistoryItem bookmark = new HistoryItem(mCurrentView.getUrl(),
 					mCurrentView.getTitle());
@@ -3494,7 +3411,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
 						searchTheWeb(mSearch.getText().toString());
-						LightningView v = getCurrentWebView();
+						MyWebView v = getCurrentWebView();
 						if (v != null) {
 							v.requestFocus();
 						}
@@ -3520,7 +3437,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(mSearch.getWindowToken(), 0);
 					searchTheWeb(mSearch.getText().toString());
-					LightningView v = getCurrentWebView();
+					MyWebView v = getCurrentWebView();
 					if (v != null) {
 						v.requestFocus();
 					}
@@ -3533,7 +3450,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		public class FocusChangeListener implements OnFocusChangeListener {
 			@Override
 			public void onFocusChange(View v, final boolean hasFocus) {
-				LightningView wv = getCurrentWebView();
+				MyWebView wv = getCurrentWebView();
 				if (!hasFocus && wv != null) {
 					if (wv.getProgress() < 100) {
 						setIsLoading();
@@ -3710,7 +3627,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-			LightningView wv = getCurrentWebView();
+			MyWebView wv = getCurrentWebView();
 			if (wv == null) {
 				return;
 			}
@@ -3789,7 +3706,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	public class LightningViewAdapter extends ArrayAdapter<LightningView> {
+	public class LightningViewAdapter extends ArrayAdapter<MyWebView> {
 
 		final Context context;
 		final int layoutResourceId;
@@ -3797,9 +3714,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		ColorMatrix colorMatrix;
 		ColorMatrixColorFilter filter;
 		Paint paint;
-		List<LightningView> data = null;
+		List<MyWebView> data = null;
 
-		public LightningViewAdapter(Context context, int layoutResourceId, List<LightningView> data) {
+		public LightningViewAdapter(Context context, int layoutResourceId, List<MyWebView> data) {
 			super(context, layoutResourceId, data);
 			this.layoutResourceId = layoutResourceId;
 			this.context = context;
@@ -3830,7 +3747,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 			ViewCompat.jumpDrawablesToCurrentState(holder.exit);
 
-			LightningView web = data.get(position);
+			MyWebView web = data.get(position);
 			holder.txtTitle.setText(web.getTitle());
 			if (web.isForegroundTab()) {
 				holder.txtTitle.setTextAppearance(context, R.style.boldText);
@@ -3978,9 +3895,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 				// if it exists, retrieve it from the cache
 				mIcon = BitmapFactory.decodeFile(image.getPath());
 			}
-			if (mIcon == null) {
 
-			}
 			if (mIcon == null) {
 				return mWebpageBitmap;
 			} else {

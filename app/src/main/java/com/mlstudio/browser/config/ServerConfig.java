@@ -74,25 +74,22 @@ public class ServerConfig {
 
 	public static String getUploadFileUrl(String sha1) {
 
-        String url = "http://file.youkes.com/upload/public/" + sha1;
-        return url;
+		return "http://file.youkes.com/upload/public/" + sha1;
 
     }
 
 	public static String getPubNoUrl(String id) {
-		String url=Pub_No_View+"/"+id;
-		return url;
+		return Pub_No_View + "/" + id;
 	}
 
 	public static String getSearchUrl(String w) {
-        String url = Constants.BAIDU_SEARCH + URLUtil.encode(w, "UTF-8");
-        return url;
-    }
+		return Constants.BAIDU_SEARCH + URLUtil.encode(w, "UTF-8");
+	}
 
 	public static String getSearchWord(String urlstr) {
 
 		Map<String, String> qmap= URLUtil.getQueryMap(urlstr);
-		if(urlstr.indexOf(Constants.BAIDU_SEARCH)>=0){
+		if (urlstr.contains(Constants.BAIDU_SEARCH)) {
 			if(qmap.containsKey("wd")){
 
 				return qmap.get("wd");
@@ -102,11 +99,8 @@ public class ServerConfig {
 	}
 
 	public static boolean isSearchUrl(String urlstr) {
-		if(urlstr==null){
-			return false;
-		}
-        return urlstr.indexOf(Constants.BAIDU_SEARCH) >= 0;
-    }
+		return urlstr != null && urlstr.indexOf(Constants.BAIDU_SEARCH) >= 0;
+	}
 
 	public static String getVoiceUploadUrl() {
 		return Voice_Upload_Url;

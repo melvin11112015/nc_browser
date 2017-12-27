@@ -154,8 +154,6 @@ public class TopBarView extends LinearLayout {
 		if(mTitleIcon!=null) {
 
 			mTitleIcon.setVisibility(View.GONE);
-		}else{
-
 		}
 
 	}

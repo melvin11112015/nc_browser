@@ -23,8 +23,7 @@ public class SiteHotActivity extends AppViewPagerActivity {
 
 	@Override
 	public ArrayList<String> getMenuList() {
-		ArrayList<String> menus = new ArrayList<>();
-		return menus;
+		return new ArrayList<>();
 	}
 
 
@@ -44,8 +43,7 @@ public class SiteHotActivity extends AppViewPagerActivity {
 
 	protected Fragment initFragment(String channelName) {
 		if(channelName.equals("历史")){
-			UserHistoryListFragment f = new UserHistoryListFragment();
-			return f;
+			return new UserHistoryListFragment();
 		}
 
 		if(!channelName.equals("热门")){
@@ -53,8 +51,7 @@ public class SiteHotActivity extends AppViewPagerActivity {
 			f.setQueryTag(channelName);
 			return f;
 		}
-		SiteHotListFragment f = new SiteHotListFragment();
-		return f;
+		return new SiteHotListFragment();
 	}
 
 

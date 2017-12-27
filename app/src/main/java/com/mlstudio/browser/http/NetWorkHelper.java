@@ -11,7 +11,6 @@ import android.util.Log;
 public class NetWorkHelper {
 
     public static Uri uri = Uri.parse("content://telephony/carriers");
-    private static String LOG_TAG = "NetWorkHelper";
 
     /**
      * 判断是否有网络连
@@ -24,8 +23,8 @@ public class NetWorkHelper {
         } else {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
                 }
@@ -42,10 +41,8 @@ public class NetWorkHelper {
         {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
-                for (int i = 0; i < info.length; i++)
-                {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         netstate = true;
                         break;
                     }
@@ -61,6 +58,7 @@ public class NetWorkHelper {
     public static boolean isNetworkRoaming(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        String LOG_TAG = "NetWorkHelper";
         if (connectivity == null) {
             Log.w(LOG_TAG, "couldn't get connectivity manager");
         } else {

@@ -136,7 +136,7 @@ public class HelpUtils {
             if (i == srcList.size() - 1) {
                 sb.append(srcList.get(i).trim());
             } else {
-                sb.append(srcList.get(i).trim() + separator);
+                sb.append(srcList.get(i).trim()).append(separator);
             }
         return sb.toString();
     }
@@ -425,8 +425,7 @@ public class HelpUtils {
                 if(outWidth <= width || outHeight <= height){
                     sampleSize = 0;
                     setInNativeAlloc(options);
-                    Bitmap decodeMuiltBitmap = decodeMuilt(options, b, path, uri, resource);
-                    return decodeMuiltBitmap;
+                    return decodeMuilt(options, b, path, uri, resource);
                 } else {
                     options.inSampleSize = Math.max(outWidth / width, outHeight / height);
                     sampleSize = options.inSampleSize;
@@ -538,7 +537,7 @@ public class HelpUtils {
     }
 
     public static void setInNativeAlloc(BitmapFactory.Options options) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !inNativeAllocAccessError) {
+        if (!inNativeAllocAccessError) {
             try {
                 BitmapFactory.Options.class.getField("inNativeAlloc").setBoolean(options, true);
                 return ;
@@ -668,7 +667,7 @@ public class HelpUtils {
      * @param srcPath
      * @return Options {@link BitmapFactory.Options}
      */
-    public final static BitmapFactory.Options getBitmapOptions(String srcPath) {
+    public static BitmapFactory.Options getBitmapOptions(String srcPath) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(srcPath);
@@ -748,9 +747,7 @@ public class HelpUtils {
             }
 
             options.inJustDecodeBounds = false;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                options.inMutable = true;
-            }
+            options.inMutable = true;
             LogUtil.i(TAG, "bitmap required size=" + newWidth + "x" + newHeight + ", orig=" + options.outWidth + "x" + options.outHeight + ", sample=" + options.inSampleSize);
             Bitmap bm = BitmapFactory.decodeFile(path);
             setInNativeAlloc(options);
@@ -839,7 +836,7 @@ public class HelpUtils {
         ExifInterface exifInterface = null;
         try {
 
-            if(Integer.valueOf(Build.VERSION.SDK).intValue() >= 5) {
+            if (Integer.valueOf(Build.VERSION.SDK) >= 5) {
                 exifInterface = new ExifInterface(filePath);
                 int attributeInt = - 1;
                 if(exifInterface != null) {
@@ -941,14 +938,12 @@ public class HelpUtils {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         setInNativeAlloc(options);
         try {
-            Bitmap bitmap = BitmapFactory.decodeStream(stream, null,options);
-            return bitmap;
+            return BitmapFactory.decodeStream(stream, null, options);
         } catch (OutOfMemoryError e) {
             options.inPreferredConfig = Bitmap.Config.RGB_565;
             setInNativeAlloc(options);
             try {
-                Bitmap bitmap = BitmapFactory.decodeStream(stream, null,options);
-                return bitmap;
+                return BitmapFactory.decodeStream(stream, null, options);
             } catch (OutOfMemoryError e2) {
             }
         }
@@ -986,8 +981,7 @@ public class HelpUtils {
      */
     public static Bitmap newBitmap(int width, int height,Bitmap.Config config) {
         try {
-            Bitmap bitmap = Bitmap.createBitmap(width, height,config);
-            return bitmap;
+            return Bitmap.createBitmap(width, height, config);
         } catch (Throwable localThrowable) {
             LogUtil.e(TAG, localThrowable.getMessage());
         }

@@ -34,8 +34,8 @@ public class SiteHotApi {
 	}
 	
 	public void query(String tag,int p, OnTaskCompleted listener) {
-		List<NameValuePair> h = new ArrayList<NameValuePair>();
-		h.add(new NameValuePair("p", String.valueOf(p)));
+        List<NameValuePair> h = new ArrayList<>();
+        h.add(new NameValuePair("p", String.valueOf(p)));
 		h.add(new NameValuePair("tag", tag));
 		HttpPostTask.execute(listener, h, URL_Site_Hot_Query);
 	}

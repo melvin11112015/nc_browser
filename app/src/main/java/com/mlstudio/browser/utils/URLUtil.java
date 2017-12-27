@@ -20,8 +20,7 @@ public class URLUtil {
 
 		try {
 			URL u = new URL(urlstr);
-			String ret=u.getProtocol()+"://"+u.getHost();
-			return ret;
+			return u.getProtocol() + "://" + u.getHost();
 		} catch (MalformedURLException e) {
 
 			return "";
@@ -33,8 +32,7 @@ public class URLUtil {
 
 		try {
 			URL u = new URL(urlstr);
-			String ret=u.getHost();
-			return ret;
+			return u.getHost();
 		} catch (MalformedURLException e) {
 
 			return "";
@@ -44,50 +42,51 @@ public class URLUtil {
 
 	public static String addQueryMap(HashMap<String, String> queryMap, String url) {
 		Iterator iter = queryMap.entrySet().iterator();
+		StringBuilder urlBuilder = new StringBuilder(url);
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
 
 			try {
 				String q = (String) entry.getValue();
 				String e = URLEncoder.encode(q, "utf-8");
-				url += "&" + entry.getKey() + "=" + e;
+				urlBuilder.append("&").append(entry.getKey()).append("=").append(e);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
+		url = urlBuilder.toString();
 		return url;
 	}
 	
 	public static String getQueryString(HashMap<String, String> queryMap) {
-		String url = "";
-		Iterator iter = queryMap.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		StringBuilder url = new StringBuilder();
+		for (Object o : queryMap.entrySet()) {
+			Map.Entry entry = (Map.Entry) o;
 
 			try {
 				String q = (String) entry.getValue();
 				String e = URLEncoder.encode(q, "utf-8");
-				url += "&" + entry.getKey() + "=" + e;
+				url.append("&").append(entry.getKey()).append("=").append(e);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
-		return url;
+		return url.toString();
 		
 	}
 
 	public static String getQueryString(List<NameValuePair> queryMap) {
-		String url = "";
+		StringBuilder url = new StringBuilder();
 		for(NameValuePair p:queryMap){
 			try {
 				String q = p.getValue();
 				if(q!=null&&!q.equals("")) {
 					String e = URLEncoder.encode(q, "utf-8");
-					url += "&" + p.getName() + "=" + e;
+					url.append("&").append(p.getName()).append("=").append(e);
 				}
 
 			} catch (Exception e) {
@@ -95,7 +94,7 @@ public class URLUtil {
 			}
 		}
 
-		return url;
+		return url.toString();
 
 	}
 
@@ -116,7 +115,7 @@ public class URLUtil {
 	}
 
 	public static Map<String, String> getQueryMap(String urlstr) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		if(urlstr==null){
 			return map;
 		}
@@ -146,9 +145,6 @@ public class URLUtil {
 	}
 
 	public static boolean isValideUrl(String url) {
-		if(url==null){
-			return false;
-		}
-        return url.startsWith("http://") || url.startsWith("https://");
-    }
+		return url != null && (url.startsWith("http://") || url.startsWith("https://"));
+	}
 }

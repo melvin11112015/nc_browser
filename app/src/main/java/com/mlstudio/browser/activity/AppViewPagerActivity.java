@@ -28,8 +28,8 @@ public class AppViewPagerActivity extends AppMenuActivity {
 	protected ColumnHorizontalScrollView mColumnHorizontalScrollView;
 	protected ImageView button_more_columns;
 	protected View navbarView;
-	ArrayList<ChannelItem> userChannelLists = new ArrayList<ChannelItem>();
-	int mScreenWidth = 0;
+    ArrayList<ChannelItem> userChannelLists = new ArrayList<>();
+    int mScreenWidth = 0;
 	int mItemWidth = 0;
 	int columnSelectIndex = 0;
 	public ViewPager.OnPageChangeListener pageListener = new ViewPager.OnPageChangeListener() {
@@ -49,8 +49,8 @@ public class AppViewPagerActivity extends AppMenuActivity {
 			selectTab(position);
 		}
 	};
-	private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-	private BaseFragmentPagerAdapter mAdapetr;
+    private ArrayList<Fragment> fragments = new ArrayList<>();
+    private BaseFragmentPagerAdapter mAdapetr;
 
 	@Override
 	protected int getLayoutId() {
@@ -68,9 +68,8 @@ public class AppViewPagerActivity extends AppMenuActivity {
 	 * @return
 	 */
 	protected ArrayList<ChannelItem> getUserChannelLists(){
-		ArrayList<ChannelItem> list=new ArrayList<ChannelItem>();
-		return list;
-	}
+        return new ArrayList<>();
+    }
 
 	private void initColumnData() {
 		userChannelLists = getUserChannelLists();
@@ -100,9 +99,8 @@ public class AppViewPagerActivity extends AppMenuActivity {
 	 * @return
 	 */
 	protected Fragment initFragment(String channelName) {
-		Fragment f=new Fragment();
-		return f;
-	}
+        return new Fragment();
+    }
 
 	private void initViewPager() {
 		mViewPager = findViewById(R.id.mViewPager);

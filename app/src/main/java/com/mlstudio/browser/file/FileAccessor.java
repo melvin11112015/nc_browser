@@ -239,13 +239,10 @@ public class FileAccessor {
 	}
 
 	public static boolean delFile(String filePath) {
-		File file = new File(filePath);
-		if (file == null || !file.exists()) {
-			return true;
-		}
+        File file = new File(filePath);
+        return file == null || !file.exists() || file.delete();
 
-		return file.delete();
-	}
+    }
 
 	/**
 	 * 

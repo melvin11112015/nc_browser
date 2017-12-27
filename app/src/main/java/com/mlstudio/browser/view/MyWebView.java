@@ -73,7 +73,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 
-public class LightningView {
+public class MyWebView {
 
 	private static final int API = android.os.Build.VERSION.SDK_INT;
 	private static final int SCROLL_UP_THRESHOLD = Utils.convertDpToPixels(10);
@@ -101,7 +101,6 @@ public class LightningView {
 	boolean darkTheme = false;
 	String currentUrl = "";
 	HtmlParserJavascriptInterface parserInterface = null;
-	private OnTouchListener onTouchListener;
 	private WebView mWebView = null;
 	//private int
 	private BrowserController mBrowserController;
@@ -115,7 +114,7 @@ public class LightningView {
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
-	public LightningView(Activity activity, String url, boolean darkTheme) {
+	public MyWebView(Activity activity, String url, boolean darkTheme) {
 
 		mActivity = activity;
 		mTitle = new Title(activity, darkTheme);
@@ -148,13 +147,12 @@ public class LightningView {
 	}
 
 	public void setOnTouchListener(OnTouchListener onTouchListener) {
-		this.onTouchListener = onTouchListener;
-		this.mWebView.setOnTouchListener(this.onTouchListener);
+		OnTouchListener onTouchListener1 = onTouchListener;
+		this.mWebView.setOnTouchListener(onTouchListener1);
 	}
 
 	public String getBrowserScreenShotPath(int index){
-		String path = FileAccessor.Share_Image_Dir + "/" + "browser"+index+".png";
-		return path;
+		return FileAccessor.Share_Image_Dir + "/" + "browser" + index + ".png";
 	}
 
 	public Bitmap getScreenShot(int index) {
@@ -416,7 +414,7 @@ this.webViewAction=action;
 	void setPageCacheCapacity(WebSettings webSettings){
 
 		try {
-			Object[] args = {Integer.valueOf(5)};
+			Object[] args = {5};
 			Method m = WebSettings.class.getMethod("setPageCacheCapacity", int.class);
 			m.setAccessible(true);
 			m.invoke(webSettings, args); //wSettings是WebSettings对象
@@ -799,15 +797,14 @@ this.webViewAction=action;
 	public WebBackForwardList copyBackForwardList() {
 
 		//mWebView.saveState()
-		WebBackForwardList wbfl = mWebView.copyBackForwardList();
 		//mWebView.s
-		return wbfl;
+		return mWebView.copyBackForwardList();
 	}
 
 	public interface WebViewAction {
-		void OnLinkClicked(LightningView view, String url);
+		void OnLinkClicked(MyWebView view, String url);
 
-		void OnBackClicked(LightningView view, String url);
+		void OnBackClicked(MyWebView view, String url);
 
 	}
 
@@ -1066,7 +1063,8 @@ this.webViewAction=action;
 				mActivity.startActivity(i);
 				view.reload();
 				return true;
-			} else if (url.startsWith("intent://")) {
+			}
+			if (url.startsWith("intent://")) {
 				Intent intent;
 				try {
 					intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
@@ -1111,10 +1109,11 @@ this.webViewAction=action;
 				return true;
 			}
 
-			return ret;
-			/*
+			//防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
+			//没有安装该app时，返回true，表示拦截自定义链接，但不跳转，避免弹出上面的错误页面
+			return true;
+			//return ret;
 
-			*/
 		}
 	}
 

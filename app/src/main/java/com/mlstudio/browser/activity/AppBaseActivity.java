@@ -21,7 +21,6 @@ import com.mlstudio.browser.R;
 import com.mlstudio.browser.ui.TopBarView;
 import com.mlstudio.browser.utils.LogUtil;
 
-import java.util.Iterator;
 import java.util.Set;
 
 public abstract class AppBaseActivity extends FragmentActivity implements
@@ -95,14 +94,12 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 			}
 			Set<View> views = getReturnInvalidAreaView();
 			if (views != null && views.size() > 0) {
-				Iterator<View> iterator = views.iterator();
-				while (iterator.hasNext()) {
-					View view = iterator.next();
+				for (View view : views) {
 					if (view != null) {
 						Rect invalidArea = getReturnInvalidArea(view);
 						if (invalidArea != null
 								&& invalidArea.contains((int) ev.getX(),
-										(int) ev.getY())) {
+								(int) ev.getY())) {
 							reset();
 							mIsChildScrolling = true;
 							return super.dispatchTouchEvent(ev);
@@ -212,18 +209,12 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (mBaseActivity.onKeyDown(keyCode, event)) {
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
+		return mBaseActivity.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (mBaseActivity.onKeyUp(keyCode, event)) {
-			return true;
-		}
-		return super.onKeyUp(keyCode, event);
+		return mBaseActivity.onKeyUp(keyCode, event) || super.onKeyUp(keyCode, event);
 	}
 
 	public void hideSoftKeyboard() {
@@ -375,13 +366,9 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 		}
 		float f1 = 0.0F;
 		if (!(this.mIsChildScrolling)) {
-			if (e1 != null) {
-				f1 = e1.getX();
-			}
+			f1 = e1.getX();
 			float f2 = 0.0F;
-			if (e2 != null) {
-				f2 = e2.getX();
-			}
+			f2 = e2.getX();
 			if (f1 - f2 < getMinExitScrollX()) {
 				this.mScrollLimit = 5;
 				close();

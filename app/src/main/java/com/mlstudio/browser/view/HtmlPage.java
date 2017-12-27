@@ -15,11 +15,10 @@ import java.util.regex.Pattern;
  * Created by xuming on 2015/10/27.
  */
 public class HtmlPage {
-    private static HashMap<String,HtmlRule> hashMap=new HashMap<String,HtmlRule>();
+    private static HashMap<String, HtmlRule> hashMap = new HashMap<>();
     private static  boolean inited=false;
     private String title = "";
     private String img = "";
-    private int type = LinkType.Type_Unknown;
     private String url = "";
     private String html = "";
 
@@ -79,6 +78,7 @@ public class HtmlPage {
         init();
         String host = URLUtil.getHostOnly(url);
         Document doc = Jsoup.parse(html);
+        int type = LinkType.Type_Unknown;
         if (hashMap.containsKey(host)) {
 
             HtmlRule rule = hashMap.get(host);
@@ -88,7 +88,7 @@ public class HtmlPage {
 
                 title = doc.select(rule.titleSelector).first().text();
                 img = doc.select(rule.imgSelector).first().attr("src");
-                type=rule.type;
+                type = rule.type;
                 //ToastUtil.showMessage(host + ":" + title);
                 return;
             }
