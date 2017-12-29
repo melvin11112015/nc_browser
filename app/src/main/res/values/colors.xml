@@ -20,7 +20,6 @@
     <color name="small_line_color">#26000000</color>
     <color name="top_bar_color">#ff222c2c</color>
     <color name="text_content">#ffa19d94</color>
-    <color name="dialog_background">#fffbf6f2</color>
     <color name="dialog_btn_press">#ffece5df</color>
     <color name="dialog_divider">#ffe8e0da</color>
     <color name="dialog_btn_normal">#fffbf6f2</color>

@@ -18,7 +18,6 @@ public class MyDownloadManagerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-
         if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(action)) {
             System.out.println("用户点击了通知");
 

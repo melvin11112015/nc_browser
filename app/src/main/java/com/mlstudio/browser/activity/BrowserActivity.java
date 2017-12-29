@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources.Theme;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -153,6 +155,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	TextView windowsText = null;
 	View settingPanel = null;
 	boolean showSetting = false;
+	boolean canExit = false;
 	View tabsPanel = null;
 	boolean showTabs = false;
 	Button fullscreenCancelBtn = null;
@@ -885,6 +888,30 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
+	/**
+	 * 权限申请返回结果
+	 *
+	 * @param requestCode  请求码
+	 * @param permissions  权限数组
+	 * @param grantResults 申请结果数组，里面都是int类型的数
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch (requestCode) {
+			case 1:
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { //同意权限申请
+
+				} else { //拒绝权限申请
+					ToastUtil.showMessage("无法获得权限");
+				}
+				break;
+			default:
+				break;
+		}
+
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -1503,23 +1530,27 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		if (getCurrentWebView() != null) {
 				Log.d(Constants.TAG, "onBackPressed");
-				if (mSearch.hasFocus()) {
-					getCurrentWebView().requestFocus();
-				} else if (getCurrentWebView().canGoBack()) {
-					if (!getCurrentWebView().isShown()) {
-						onHideCustomView();
-					} else {
-						getCurrentWebView().goBack();
-					}
+			if (mSearch.hasFocus()) {
+				canExit = false;
+				getCurrentWebView().requestFocus();
+			} else if (getCurrentWebView().canGoBack()) {
+				canExit = false;
+				if (!getCurrentWebView().isShown()) {
+					onHideCustomView();
 				} else {
-					ToastUtil.showMessage(getString(R.string.browser_no_back));
-					//deleteTab(mDrawerListLeft.getCheckedItemPosition());
+					getCurrentWebView().goBack();
 				}
-		} else {
-			Log.e(Constants.TAG, "This shouldn't happen ever");
-				super.onBackPressed();
-			}
-
+			} else {
+				if (canExit) {
+					browserExit();
+					super.onBackPressed();
+				} else {
+					ToastUtil.showMessage(getString(R.string.browser_no_back) + ",再次返回退出");
+					//deleteTab(mDrawerListLeft.getCheckedItemPosition());
+					canExit = true;
+				}
+				}
+		}
 	}
 
 	@Override
@@ -2186,7 +2217,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 	}
 
-	void fullscreenCancel(){
+	void fullscreenCancel() {
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		if(mToolbarLayout!=null){
 			mToolbarLayout.setVisibility(View.VISIBLE);
 		}
@@ -3820,8 +3852,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			holder.txtTitle.setText(web.getTitle());
 			holder.favicon.setImageBitmap(mWebpageBitmap);
 			if (web.getBitmap() == null) {
-				//隐藏书签图片
-				//getImage(holder.favicon, web);
+				getImage(holder.favicon, web);
 			} else {
 				holder.favicon.setImageBitmap(web.getBitmap());
 			}

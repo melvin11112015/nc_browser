@@ -31,7 +31,6 @@ public class BookmarkManager {
 	private static final String FOLDER = "folder";
 	private static final String ORDER = "order";
 	private static final String FILE_BOOKMARKS = "bookmarks.dat";
-	private static final String[] Youkes = {"http://youkes.com/", "优克斯"};
 	private static final String[] Baidu = {"https://m.baidu.com/", "百度"};
 	private static final String[] Sina = {"http://sina.cn/", "新浪网"};
 	private static final String[] QQ3G = {"http://info.3g.qq.com/", "腾讯网"};
@@ -80,7 +79,6 @@ public class BookmarkManager {
 	private static final String[] Meipai = {"http://www.meipai.com/", "美拍"};
 	private static final String[] YidianZhixun = {"http://www.yidianzixun.com/", "一点资讯"};
 	public static final String[][] DEFAULT_BOOKMARKS = {
-			Youkes,
 			Baidu,
 			Sina,
 			//

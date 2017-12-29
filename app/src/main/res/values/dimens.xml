@@ -29,7 +29,6 @@
     <dimen name="topbar_height">52.0dip</dimen>
     <dimen name="dialog_round_radius">4.0dip</dimen>
     <dimen name="dialog_padding">15.0dip</dimen>
-    <dimen name="MinDialogWidth">320.0dip</dimen>
     <dimen name="text_list_title">16.0sp</dimen>
     <dimen name="listview_scrollbar_width">2dp</dimen>
     <dimen name="drop_down_list_footer_progress_bar_height">36dp</dimen>

@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.0"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -67,7 +67,7 @@
         android:id="@+id/dialog_layout_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.0"
+        android:layout_weight="1"
         android:background="@drawable/bg_dialog_btnbar"
         android:gravity="center"
         android:orientation="horizontal"
@@ -79,7 +79,7 @@
             style="@style/DialogButton.Left"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_weight="1"
             android:text="Button"
             android:visibility="gone" />
 
@@ -88,7 +88,7 @@
             style="@style/DialogButton.Center"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_weight="1"
             android:text="Button"
             android:visibility="gone" />
 
@@ -97,7 +97,7 @@
             style="@style/DialogButton.Right"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_weight="1"
             android:text="Button"
             android:visibility="gone" />
     </LinearLayout>

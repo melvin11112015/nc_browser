@@ -30,8 +30,8 @@ public class PreferenceUtils {
         }
         final SharedPreferences settings = PreferenceManager
                 .getDefaultSharedPreferences(MainApp.getInstance());
-        settings.edit().putString(PreferenceConstants.UserId, value).commit();
-    }
+		settings.edit().putString(PreferenceConstants.UserId, value).apply();
+	}
 
 	public static String getCity() {
 		return getUserPrefStr(PreferenceConstants.City);
@@ -61,7 +61,7 @@ public class PreferenceUtils {
 		String userId=PreferenceUtils.getUserId();
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(MainApp.getInstance());
-		settings.edit().putInt(userId + ":" + key, value).commit();
+		settings.edit().putInt(userId + ":" + key, value).apply();
 	}
 
 	public static int getUserPrefInt(final String key) {
@@ -82,14 +82,14 @@ public class PreferenceUtils {
 		String userId=PreferenceUtils.getUserId();
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(MainApp.getInstance());
-		settings.edit().putBoolean(userId + ":" + key, value).commit();
+		settings.edit().putBoolean(userId + ":" + key, value).apply();
 	}
 
 	public static void setUserPrefStr(final String key,final String value) {
 		String userId=PreferenceUtils.getUserId();
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(MainApp.getInstance());
-		settings.edit().putString(userId + ":" + key, value).commit();
+		settings.edit().putString(userId + ":" + key, value).apply();
 	}
 
 	public static String getUserPrefStr(final String key) {
@@ -111,7 +111,7 @@ public class PreferenceUtils {
 			final SharedPreferences p) {
 		final Editor editor = p.edit();
 		editor.clear();
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -154,7 +154,7 @@ public class PreferenceUtils {
 				.putString(userId+":"+PreferenceConstants.UserName, userName)
 				.putString(userId + ":" + PreferenceConstants.UserPhoto, userPhoto)
 				.putString(userId + ":" + PreferenceConstants.UploadId, uploadId)
-				.commit();
+				.apply();
 
 		addRecentAccount();
 
@@ -210,7 +210,7 @@ public class PreferenceUtils {
 				.putString(userId + ":" + PreferenceConstants.AccessKey, "")
 				.putString(userId + ":" + PreferenceConstants.ChatId, "")
 				.putString(userId + ":" + PreferenceConstants.ChatPwd, "")
-				.commit();
+				.apply();
 	}
 
 	public static boolean isUserVisitor() {
@@ -219,7 +219,7 @@ public class PreferenceUtils {
 			return true;
 		}
 		String accessKey = getAccessKey();
-		return StringUtils.isEmpty(accessKey) || userId.indexOf("Anonymous_") >= 0;
+		return StringUtils.isEmpty(accessKey) || userId.contains("Anonymous_");
 	}
 
 	public static boolean isBookmarkInited(){
@@ -247,7 +247,7 @@ public class PreferenceUtils {
 
 		String saveJsonStr=RecentAccountJSONList.convertJSONString(list);
 		settings.edit().putString(PreferenceConstants.RecentAccount, saveJsonStr)
-				.commit();
+				.apply();
 	}
 
 	public static ArrayList<RecentAccountJSON> getRecentAccountList() {

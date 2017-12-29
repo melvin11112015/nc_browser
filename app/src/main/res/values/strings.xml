@@ -20,19 +20,9 @@
 
     <string name="edit">编辑</string>
 
-    <string name="share_to_social">社交分享</string>
-
-    <string name="share_to_topic_circle">分享到兴趣圈</string>
-    <string name="share_pic">分享到图片</string>
-    <string name="share_circle">分享到朋友圈</string>
-    <string name="share_news">分享到新闻</string>
-    <string name="save_pic">保存图片</string>
     <string name="browser_no_back">已经是最后一页</string>
     <string name="browser_no_forward">已经是最前一页</string>
-    <string name="more">更多</string>
     <string name="link">链接</string>
-
-    <string name="fav_web_image">收藏图片</string>
 
     <string name="common_enter_activity">当前所在页面,</string>
 
@@ -120,11 +110,6 @@
     <string name="action_back">返回</string>
     <string name="action_find">页内搜索</string>
     <string name="download_pending">正在开始下载…</string>
-    <string name="cannot_download">仅可下载以 \"http\" 或 \"https\" 开头的链接地址</string>
-    <string name="download_no_sdcard_dlg_title">未发现 SDCard</string>
-    <string name="download_no_sdcard_dlg_msg">为正常下载此文件需要 USB 存储设备。</string>
-    <string name="download_sdcard_busy_dlg_title">USB 存储不可用</string>
-    <string name="download_sdcard_busy_dlg_msg">USB 存储设备目前正忙，为确保正常下载此文件请在通知栏中确认关闭 USB 大容量存储。</string>
     <string name="message_import">书签导入成功</string>
     <string name="max_tabs">达到最大标签数</string>
     <string name="message_text_copied">文本已复制到剪贴板</string>
@@ -140,9 +125,6 @@
     <string name="title_sign_in">登录</string>
     <string name="hint_username">用户名</string>
     <string name="hint_password">密码</string>
-    <string name="use_tor_prompt">看起来你已经安装了 Orbot. 你想要使用 Tor 吗？</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
     <string name="untitled">未标题的</string>
     <string name="title_file_chooser">文件选择器</string>
     <string name="bookmark_export_path">书签已导出到</string>
@@ -154,15 +136,6 @@
     <string name="tabs">标签</string>
 
 
-    <string name="http_proxy">HTTP proxy</string>
-    <string-array name="proxy_choices_array">
-        <item>None</item>
-        <item>Orbot</item>
-        <item>I2P</item>
-        <item>Manual</item>
-    </string-array>
-
-    <string name="use_i2p_prompt">It looks like you have I2P installed. Do you want toUserId use I2P?</string>
     <string name="download_complete">下载完成</string>
 
 

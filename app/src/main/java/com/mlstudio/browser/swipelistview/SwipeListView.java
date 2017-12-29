@@ -253,6 +253,7 @@ public class SwipeListView extends ListView implements OnScrollListener {
             isAutoLoadOnBottom = styled.getBoolean(
                     R.styleable.SwipeListView_swipeIsAutoLoadOnBottom,
                     false);
+            styled.recycle();
 
         }
 

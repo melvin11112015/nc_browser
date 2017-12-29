@@ -99,8 +99,8 @@ public class ServerConfig {
 	}
 
 	public static boolean isSearchUrl(String urlstr) {
-		return urlstr != null && urlstr.indexOf(Constants.BAIDU_SEARCH) >= 0;
-	}
+        return urlstr != null && urlstr.contains(Constants.BAIDU_SEARCH);
+    }
 
 	public static String getVoiceUploadUrl() {
 		return Voice_Upload_Url;

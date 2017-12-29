@@ -2,64 +2,6 @@
 <resources>
 
 
-    <string-array name="webview_image_actions">
-        <item>@string/fav_web_image</item>
-        <item>@string/share_pic</item>
-        <item>@string/share_circle</item>
-        <item>@string/share_to_topic_circle</item>
-        <item>@string/share_to_social</item>
-        <item>@string/save_pic</item>
-
-    </string-array>
-
-
-    <string-array name="webview_link_actions">
-
-
-        <item>@string/share_circle</item>
-        <item>@string/share_to_topic_circle</item>
-        <item>@string/share_to_social</item>
-
-
-    </string-array>
-
-    <string-array name="webview_action_image_goods">
-        <item>@string/share_pic</item>
-        <item>@string/share_circle</item>
-        <item>采集到商品</item>
-        <item>保存图片</item>
-
-    </string-array>
-
-    <string-array name="webview_action_image_visitor">
-        <item>社交分享</item>
-        <item>保存图片</item>
-    </string-array>
-
-    <string-array name="webview_action_image_news">
-        <item>@string/share_pic</item>
-        <item>@string/share_circle</item>
-        <item>@string/share_news</item>
-        <item>@string/save_pic</item>
-        <item>@string/more</item>
-    </string-array>
-
-
-    <string-array name="webview_image_actions_more">
-        <item>创建话题圈</item>
-        <item>发起话题</item>
-        <item>回复话题</item>
-        <item>返回</item>
-    </string-array>
-
-    <string-array name="webview_image_actions_social">
-        <item>发送给微信朋友</item>
-        <item>分享到微信朋友圈</item>
-        <item>发送给QQ朋友</item>
-        <item>分享到QQ空间</item>
-    </string-array>
-
-
     <string-array name="webview_action_link">
         <item>新标签</item>
         <item>打开链接</item>

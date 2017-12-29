@@ -301,12 +301,12 @@ public class StringUtils {
 	}
 
 	public static String toString(String[] arr) {
-		String str = "[";
+		StringBuilder str = new StringBuilder("[");
 		for (String anArr : arr) {
-			str += "'" + anArr + "',";
+			str.append("'").append(anArr).append("',");
 		}
-		str += "]";
-		return str;
+		str.append("]");
+		return str.toString();
 	}
 	
 
