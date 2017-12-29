@@ -18,3 +18,4 @@
 
 -dontwarn com.baidu.**
 -dontwarn com.tencent.**
+-keep public class android.net.http.SslError

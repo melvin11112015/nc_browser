@@ -8,8 +8,8 @@ android {
         applicationId "com.mlstudio.browser"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "1.0.7"
     }
     buildTypes {
         release {
@@ -28,11 +28,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:26+'
     compile 'com.android.support:design:26+'
-
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile files('libs/jsoup-1.8.3.jar')
-    compile files('libs/libammsdk.jar')
-    compile files('libs/open_sdk_r5509.jar')
-    compile files('libs/mta-sdk-1.6.2.jar')
+    compile 'org.jsoup:jsoup:1.9.2'
 
 }

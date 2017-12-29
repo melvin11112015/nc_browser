@@ -1045,7 +1045,11 @@ this.webViewAction=action;
 
 			//viewUrls.add(url);
 			// Check if configured proxy is available
-			if (!mBrowserController.isProxyReady()) {
+            if (url.startsWith("http:") || url.startsWith("https:")) {
+                view.loadUrl(url);
+                return false;
+            }
+            if (!mBrowserController.isProxyReady()) {
 				// User has been notified
 				return true;
 			}
@@ -1111,7 +1115,8 @@ this.webViewAction=action;
 
 			//防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
 			//没有安装该app时，返回true，表示拦截自定义链接，但不跳转，避免弹出上面的错误页面
-			return true;
+            ToastUtil.showMessage("无法打开:" + url);
+            return true;
 			//return ret;
 
 		}

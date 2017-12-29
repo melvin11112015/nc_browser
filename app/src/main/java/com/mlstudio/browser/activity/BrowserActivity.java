@@ -101,14 +101,10 @@ import com.mlstudio.browser.dialog.ECListDialog;
 import com.mlstudio.browser.object.ClickHandler;
 import com.mlstudio.browser.object.DrawerArrowDrawable;
 import com.mlstudio.browser.object.SearchAdapter;
-import com.mlstudio.browser.open.QQShareApi;
-import com.mlstudio.browser.open.WeixinShareApi;
 import com.mlstudio.browser.preference.PreferenceManager;
 import com.mlstudio.browser.preference.PreferenceUtils;
 import com.mlstudio.browser.site.SiteHotActivity;
 import com.mlstudio.browser.utils.ImageSaveUtil;
-import com.mlstudio.browser.utils.LinkType;
-import com.mlstudio.browser.utils.LinkUtils;
 import com.mlstudio.browser.utils.SoftKeyboardUtil;
 import com.mlstudio.browser.utils.StringUtils;
 import com.mlstudio.browser.utils.ToastUtil;
@@ -116,8 +112,6 @@ import com.mlstudio.browser.utils.Utils;
 import com.mlstudio.browser.view.AnimatedProgressBar;
 import com.mlstudio.browser.view.HtmlPage;
 import com.mlstudio.browser.view.MyWebView;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.UiError;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -2562,8 +2556,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	private void onImageLongClick(final String url,final String imageUrl) {
 		this.currentClickUrl =url;
 		this.currentClickImageUrl=imageUrl;
-		ECListDialog dialog = getImageMenuDialog();
-		dialog.show();
+		/*ECListDialog dialog = getImageMenuDialog();
+		dialog.show();*/
 	}
 
 	private ECListDialog getLinkMenuDialog() {
@@ -2688,419 +2682,420 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 		}
 	}
 
-	private ECListDialog getVisitorImageDialog() {
-		if (visitorImageDlg != null) {
-			return visitorImageDlg;
-		}
-
-
-		visitorImageDlg = new ECListDialog(this,
-				R.array.webview_action_image_visitor);
-		visitorImageDlg.setTitle(getString(R.string.share));
-		visitorImageDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageVisitorMenuClicked(d, position);
-			}
-		});
-		return visitorImageDlg;
-	}
-
-	private void onImageVisitorMenuClicked(Dialog d, int position) {
-
-		switch (position) {
-			case 0:
-				openImageMenuSocial();
-				break;
-			case 1:
-				saveImage(currentClickImageUrl);
-				break;
-		}
-	}
-
-	private void onTopbarShareClick() {
-
-		this.currentClickUrl =getCurrentWebView().getUrl();
-		this.currentClickImageUrl="";
-
-		getLinkShareMenuDialog().show();
-
-
-	}
-
-	private ECListDialog getLinkShareMenuDialog() {
-		if(PreferenceUtils.isUserVisitor()){
-			return getImageMenuDialogSocial();
-		}
-
-		if(linkShareMenuDlg!=null){
-			return linkShareMenuDlg;
-		}
-
-
-		linkShareMenuDlg = new ECListDialog(this,
-				R.array.webview_link_actions);
-		linkShareMenuDlg.setTitle(getString(R.string.share));
-		linkShareMenuDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onLinkShareMenuClicked(d, position);
-			}
-		});
-
-		return linkShareMenuDlg;
-
-	}
-
-	private void onLinkShareMenuClicked(Dialog d, int position) {
-
-		switch (position) {
-			case 0:
-				shareImageCircle(currentClickImageUrl);
-				break;
-			case 1:
-				shareToTopicCircle(this.currentClickImageUrl);
-				break;
-			case 2:
-				openImageMenuSocial();
-				break;
-		}
-	}
-
-	private ECListDialog getImageMenuDialog() {
-		if(PreferenceUtils.isUserVisitor()){
-			return getVisitorImageDialog();
-		}
-		MyWebView lv = getCurrentWebView();
-		String url=lv.getUrl();
-		if(LinkUtils.getLinkType(url)== LinkType.Type_Goods){
-			return getImageMenuDialogGoods();
-		}
-
-		if(HtmlPage.getLinkType(url)== LinkType.Type_News){
-			return getImageMenuDialogNews();
-		}
-
-
-		if(imageMenuDlg!=null){
-			return imageMenuDlg;
-		}
-
-
-		imageMenuDlg = new ECListDialog(this,
-				R.array.webview_image_actions);
-		imageMenuDlg.setTitle(getString(R.string.share));
-		imageMenuDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageMenuClicked(d, position);
-			}
-		});
-		return imageMenuDlg;
-
-	}
-
-	private ECListDialog getImageMenuDialogGoods() {
-
-
-		if(imageMenuGoodsDlg !=null){
-			return imageMenuGoodsDlg;
-		}
-
-
-		imageMenuGoodsDlg = new ECListDialog(this,
-				R.array.webview_action_image_goods);
-		imageMenuGoodsDlg.setTitle(getString(R.string.share));
-		imageMenuGoodsDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageGoodsMenuClicked(d, position);
-			}
-		});
-		return imageMenuGoodsDlg;
-
-	}
-
-	private ECListDialog getImageMenuDialogNews() {
-		if (imgNewsDlg != null) {
-			return imgNewsDlg;
-		}
-
-
-		imgNewsDlg = new ECListDialog(this,
-				R.array.webview_action_image_news);
-		imgNewsDlg.setTitle(getString(R.string.share));
-		imgNewsDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageNewsMenuClicked(d, position);
-			}
-		});
-		return imgNewsDlg;
-
-	}
-
-	private ECListDialog getImageMenuDialogSocial() {
-		if(imageMenuDlgSocial!=null){
-			return imageMenuDlgSocial;
-		}
-
-		imageMenuDlgSocial = new ECListDialog(this,
-				R.array.webview_image_actions_social);
-		imageMenuDlgSocial.setTitle(getString(R.string.share));
-		imageMenuDlgSocial.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageMenuSocialClicked(d, position);
-			}
-		});
-
-		return imageMenuDlgSocial;
-
-	}
-
-	private void onImageMenuSocialClicked(Dialog d, int position) {
-		String url = this.getCurrentWebView().getUrl();
-		String title = this.getCurrentWebView().getTitle();
-		switch (position) {
-			case 0:
-				shareWeixinFriend(url, title, this.currentClickImageUrl);
-				break;
-			case 1:
-				shareWeixinCircle(url, title, this.currentClickImageUrl);
-				break;
-			case 2:
-				shareQQFriend(url, title, this.currentClickImageUrl);
-				break;
-			case 3:
-				shareQQZone(url, title, this.currentClickImageUrl);
-				break;
-
-		}
-
-	}
-
-	private void shareQQFriend(String url,String title,String imageUrl){
-
-		QQShareApi.shareWebPageQQFriend(this, url, title, "", imageUrl, new IUiListener() {
-			@Override
-			public void onComplete(Object o) {
+	/*
+		private ECListDialog getVisitorImageDialog() {
+            if (visitorImageDlg != null) {
+                return visitorImageDlg;
+            }
+
+
+            visitorImageDlg = new ECListDialog(this,
+                    R.array.webview_action_image_visitor);
+            visitorImageDlg.setTitle(getString(R.string.share));
+            visitorImageDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                @Override
+                public void onDialogItemClick(Dialog d, int position) {
+                    onImageVisitorMenuClicked(d, position);
+                }
+            });
+            return visitorImageDlg;
+        }
+
+        private void onImageVisitorMenuClicked(Dialog d, int position) {
+
+            switch (position) {
+                case 0:
+                    openImageMenuSocial();
+                    break;
+                case 1:
+                    saveImage(currentClickImageUrl);
+                    break;
+            }
+        }
+
+        private void onTopbarShareClick() {
+
+            this.currentClickUrl =getCurrentWebView().getUrl();
+            this.currentClickImageUrl="";
+
+            getLinkShareMenuDialog().show();
+
+
+        }
+
+        private ECListDialog getLinkShareMenuDialog() {
+            if(PreferenceUtils.isUserVisitor()){
+                return getImageMenuDialogSocial();
+            }
+
+            if(linkShareMenuDlg!=null){
+                return linkShareMenuDlg;
+            }
+
+
+            linkShareMenuDlg = new ECListDialog(this,
+                    R.array.webview_link_actions);
+            linkShareMenuDlg.setTitle(getString(R.string.share));
+            linkShareMenuDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                @Override
+                public void onDialogItemClick(Dialog d, int position) {
+                    onLinkShareMenuClicked(d, position);
+                }
+            });
+
+            return linkShareMenuDlg;
+
+        }
+
+        private void onLinkShareMenuClicked(Dialog d, int position) {
+
+            switch (position) {
+                case 0:
+                    shareImageCircle(currentClickImageUrl);
+                    break;
+                case 1:
+                    shareToTopicCircle(this.currentClickImageUrl);
+                    break;
+                case 2:
+                    openImageMenuSocial();
+                    break;
+            }
+        }
+
+        private ECListDialog getImageMenuDialog() {
+            if(PreferenceUtils.isUserVisitor()){
+                return getVisitorImageDialog();
+            }
+            MyWebView lv = getCurrentWebView();
+            String url=lv.getUrl();
+            if(LinkUtils.getLinkType(url)== LinkType.Type_Goods){
+                return getImageMenuDialogGoods();
+            }
+
+            if(HtmlPage.getLinkType(url)== LinkType.Type_News){
+                return getImageMenuDialogNews();
+            }
+
+
+            if(imageMenuDlg!=null){
+                return imageMenuDlg;
+            }
+
+
+            imageMenuDlg = new ECListDialog(this,
+                    R.array.webview_image_actions);
+            imageMenuDlg.setTitle(getString(R.string.share));
+            imageMenuDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                @Override
+                public void onDialogItemClick(Dialog d, int position) {
+                    onImageMenuClicked(d, position);
+                }
+            });
+            return imageMenuDlg;
+
+        }
+
+        private ECListDialog getImageMenuDialogGoods() {
+
+
+            if(imageMenuGoodsDlg !=null){
+                return imageMenuGoodsDlg;
+            }
+
+
+            imageMenuGoodsDlg = new ECListDialog(this,
+                    R.array.webview_action_image_goods);
+            imageMenuGoodsDlg.setTitle(getString(R.string.share));
+            imageMenuGoodsDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                @Override
+                public void onDialogItemClick(Dialog d, int position) {
+                    onImageGoodsMenuClicked(d, position);
+                }
+            });
+            return imageMenuGoodsDlg;
+
+        }
+
+        private ECListDialog getImageMenuDialogNews() {
+            if (imgNewsDlg != null) {
+                return imgNewsDlg;
+            }
+
+
+            imgNewsDlg = new ECListDialog(this,
+                    R.array.webview_action_image_news);
+            imgNewsDlg.setTitle(getString(R.string.share));
+            imgNewsDlg.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                @Override
+                public void onDialogItemClick(Dialog d, int position) {
+                    onImageNewsMenuClicked(d, position);
+                }
+            });
+            return imgNewsDlg;
+
+        }
+
+            private ECListDialog getImageMenuDialogSocial() {
+                if(imageMenuDlgSocial!=null){
+                    return imageMenuDlgSocial;
+                }
+
+                imageMenuDlgSocial = new ECListDialog(this,
+                        R.array.webview_image_actions_social);
+                imageMenuDlgSocial.setTitle(getString(R.string.share));
+                imageMenuDlgSocial.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                    @Override
+                    public void onDialogItemClick(Dialog d, int position) {
+                        onImageMenuSocialClicked(d, position);
+                    }
+                });
+
+                return imageMenuDlgSocial;
+
+            }
+
+            private void onImageMenuSocialClicked(Dialog d, int position) {
+                String url = this.getCurrentWebView().getUrl();
+                String title = this.getCurrentWebView().getTitle();
+                switch (position) {
+                    case 0:
+                        shareWeixinFriend(url, title, this.currentClickImageUrl);
+                        break;
+                    case 1:
+                        shareWeixinCircle(url, title, this.currentClickImageUrl);
+                        break;
+                    case 2:
+                        shareQQFriend(url, title, this.currentClickImageUrl);
+                        break;
+                    case 3:
+                        shareQQZone(url, title, this.currentClickImageUrl);
+                        break;
+
+                }
+
+            }
+
+            private void shareQQFriend(String url,String title,String imageUrl){
+
+                QQShareApi.shareWebPageQQFriend(this, url, title, "", imageUrl, new IUiListener() {
+                    @Override
+                    public void onComplete(Object o) {
 
-			}
+                    }
 
-			@Override
-			public void onError(UiError uiError) {
+                    @Override
+                    public void onError(UiError uiError) {
 
-			}
+                    }
 
-			@Override
-			public void onCancel() {
+                    @Override
+                    public void onCancel() {
 
-			}
-		});
-	}
+                    }
+                });
+            }
 
-	private void shareQQZone(String url,String title,String imageUrl){
-		QQShareApi.shareToQzone(this, url, title, "", imageUrl, new IUiListener() {
-			@Override
-			public void onComplete(Object o) {
+            private void shareQQZone(String url,String title,String imageUrl){
+                QQShareApi.shareToQzone(this, url, title, "", imageUrl, new IUiListener() {
+                    @Override
+                    public void onComplete(Object o) {
 
-			}
+                    }
 
-			@Override
-			public void onError(UiError uiError) {
+                    @Override
+                    public void onError(UiError uiError) {
 
-			}
+                    }
 
-			@Override
-			public void onCancel() {
+                    @Override
+                    public void onCancel() {
 
-			}
-		});
-	}
+                    }
+                });
+            }
 
-	private void shareWeixinFriend(String url,String title,String imageUrl){
-		WeixinShareApi.shareWebPage(url, title, "", imageUrl, false);
-	}
+            private void shareWeixinFriend(String url,String title,String imageUrl){
+                WeixinShareApi.shareWebPage(url, title, "", imageUrl, false);
+            }
 
-	private void shareWeixinCircle(String url,String title,String imageUrl){
-		WeixinShareApi.shareWebPage(url, title, "", imageUrl, true);
-	}
+            private void shareWeixinCircle(String url,String title,String imageUrl){
+                WeixinShareApi.shareWebPage(url, title, "", imageUrl, true);
+            }
 
-	private ECListDialog getImageMenuDialogMore() {
-		if(imageMenuDlgMore!=null){
-			return imageMenuDlgMore;
-		}
+            private ECListDialog getImageMenuDialogMore() {
+                if(imageMenuDlgMore!=null){
+                    return imageMenuDlgMore;
+                }
 
-		imageMenuDlgMore = new ECListDialog(this,
-				R.array.webview_image_actions_more);
-		imageMenuDlgMore.setTitle(getString(R.string.share));
-		imageMenuDlgMore.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-			@Override
-			public void onDialogItemClick(Dialog d, int position) {
-				onImageMenuMoreClicked(d, position);
-			}
-		});
-		return imageMenuDlgMore;
+                imageMenuDlgMore = new ECListDialog(this,
+                        R.array.webview_image_actions_more);
+                imageMenuDlgMore.setTitle(getString(R.string.share));
+                imageMenuDlgMore.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+                    @Override
+                    public void onDialogItemClick(Dialog d, int position) {
+                        onImageMenuMoreClicked(d, position);
+                    }
+                });
+                return imageMenuDlgMore;
 
-	}
+            }
 
-	private void onImageMenuMoreClicked(Dialog d, int position) {
+            private void onImageMenuMoreClicked(Dialog d, int position) {
 
-		switch (position) {
-			case 0:
-				createTopicCircle(this.currentClickImageUrl);
-				break;
-			case 1:
-				shareToTopicCircle(this.currentClickImageUrl);
-				break;
-			case 2:
-				replyTopic(this.currentClickImageUrl);
-				break;
-			case 3:
-				ECListDialog dialog = getImageMenuDialog();
-				dialog.show();
-				break;
-		}
+                switch (position) {
+                    case 0:
+                        createTopicCircle(this.currentClickImageUrl);
+                        break;
+                    case 1:
+                        shareToTopicCircle(this.currentClickImageUrl);
+                        break;
+                    case 2:
+                        replyTopic(this.currentClickImageUrl);
+                        break;
+                    case 3:
+                        ECListDialog dialog = getImageMenuDialog();
+                        dialog.show();
+                        break;
+                }
 
-	}
+            }
 
-	private void replyTopic(String img) {
+        private void replyTopic(String img) {
 
-	}
+        }
 
-	private void shareToTopicCircle(String img) {
+        private void shareToTopicCircle(String img) {
 
 
-	}
+        }
 
-	private void createTopicCircle(String img) {
-		String url = this.getCurrentWebView().getUrl();
-		String title = this.getCurrentWebView().getTitle();
+        private void createTopicCircle(String img) {
+            String url = this.getCurrentWebView().getUrl();
+            String title = this.getCurrentWebView().getTitle();
 
-	}
+        }
 
-	public void shareImageFavorite(final String img) {
+        public void shareImageFavorite(final String img) {
 
 
 
 
-	}
+        }
 
-	private void onShareImageFavoritePage(String url,String title, String img, HtmlPage page) {
+        private void onShareImageFavoritePage(String url,String title, String img, HtmlPage page) {
 
 
-	}
+        }
 
-	public void shareImageCircle(final String img) {
+        public void shareImageCircle(final String img) {
 
 
 
 
-	}
+        }
 
-	private void onShareImageCirclePage(String url,String title, String img, HtmlPage page) {
+        private void onShareImageCirclePage(String url,String title, String img, HtmlPage page) {
 
 
-	}
+        }
 
-	private void onImageMenuClicked(Dialog d, int position) {
-		switch (position) {
-			case 0:
-				shareImageFavorite(currentClickImageUrl);
-				break;
-			case 1:
-				shareImagePublic(currentClickImageUrl);
-				break;
-			case 2:
-				shareImageCircle(currentClickImageUrl);
-				break;
-			case 3:
-				shareToTopicCircle(this.currentClickImageUrl);
+        private void onImageMenuClicked(Dialog d, int position) {
+            switch (position) {
+                case 0:
+                    shareImageFavorite(currentClickImageUrl);
+                    break;
+                case 1:
+                    shareImagePublic(currentClickImageUrl);
+                    break;
+                case 2:
+                    shareImageCircle(currentClickImageUrl);
+                    break;
+                case 3:
+                    shareToTopicCircle(this.currentClickImageUrl);
 
-				break;
-			case 4:
-				openImageMenuSocial();
-				break;
-			case 5:
-				saveImage(currentClickImageUrl);
-				break;
-		}
-	}
+                    break;
+                case 4:
+                    openImageMenuSocial();
+                    break;
+                case 5:
+                    saveImage(currentClickImageUrl);
+                    break;
+            }
+        }
 
-	private void onImageGoodsMenuClicked(Dialog d, int position) {
-		switch (position) {
+        private void onImageGoodsMenuClicked(Dialog d, int position) {
+            switch (position) {
 
-			case 0:
-				shareImagePublic(currentClickImageUrl);
-				break;
-			case 1:
-				shareImageCircle(currentClickImageUrl);
-				break;
+                case 0:
+                    shareImagePublic(currentClickImageUrl);
+                    break;
+                case 1:
+                    shareImageCircle(currentClickImageUrl);
+                    break;
 
 
-			case 2:
-				shareImageGoods(currentClickImageUrl);
-				break;
+                case 2:
+                    shareImageGoods(currentClickImageUrl);
+                    break;
 
-			case 3:
-				saveImage(currentClickImageUrl);
-				break;
+                case 3:
+                    saveImage(currentClickImageUrl);
+                    break;
 
-			case 4:
-				openImageMenuMore();
-				break;
-		}
-	}
+                case 4:
+                    openImageMenuMore();
+                    break;
+            }
+        }
 
-	private void onImageNewsMenuClicked(Dialog d, int position) {
-		switch (position) {
+        private void onImageNewsMenuClicked(Dialog d, int position) {
+            switch (position) {
 
-			case 0:
-				shareImagePublic(currentClickImageUrl);
-				break;
-			case 1:
-				shareImageCircle(currentClickImageUrl);
-				break;
+                case 0:
+                    shareImagePublic(currentClickImageUrl);
+                    break;
+                case 1:
+                    shareImageCircle(currentClickImageUrl);
+                    break;
 
 
-			case 2:
-				shareImageNews(currentClickImageUrl);
-				break;
+                case 2:
+                    shareImageNews(currentClickImageUrl);
+                    break;
 
-			case 3:
-				saveImage(currentClickImageUrl);
-				break;
+                case 3:
+                    saveImage(currentClickImageUrl);
+                    break;
 
-			case 4:
-				openImageMenuMore();
-				break;
-		}
-	}
+                case 4:
+                    openImageMenuMore();
+                    break;
+            }
+        }
 
-	private void openImageMenuSocial() {
-		ECListDialog dialog = getImageMenuDialogSocial();
-		dialog.show();
-	}
+        private void openImageMenuSocial() {
+            ECListDialog dialog = getImageMenuDialogSocial();
+            dialog.show();
+        }
 
-	private void openImageMenuMore() {
-		ECListDialog dialog = getImageMenuDialogMore();
-		dialog.show();
-	}
+        private void openImageMenuMore() {
+            ECListDialog dialog = getImageMenuDialogMore();
+            dialog.show();
+        }
 
-	public void shareImageGoods(String img) {
+        public void shareImageGoods(String img) {
 
-	}
+        }
 
-	public void shareImageNews(final String img) {
+        public void shareImageNews(final String img) {
 
-	}
+        }
 
-	public void shareImagePublic(String img) {
+        public void shareImagePublic(String img) {
 
 
-	}
-
+        }
+    */
 	private void saveImage(String img) {
 		ImageSaveUtil.saveImage(img);
 	}
@@ -3231,7 +3226,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 				fullscreenCancel();
 				break;
 			case R.id.share_web_page_action:
-				onTopbarShareClick();
+				//onTopbarShareClick();
 				break;
 			case R.id.backward_action:
 			case R.id.action_back:

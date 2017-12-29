@@ -2,9 +2,13 @@
 
 package com.mlstudio.browser.swipelistview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -14,18 +18,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.view.ViewHelper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.nineoldandroids.view.ViewHelper.setAlpha;
-import static com.nineoldandroids.view.ViewHelper.setTranslationX;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+import static android.support.v4.view.ViewCompat.animate;
+import static android.support.v4.view.ViewCompat.getX;
+import static android.support.v4.view.ViewCompat.setAlpha;
+import static android.support.v4.view.ViewCompat.setTranslationX;
 
 /**
  * Touch listener impl for the SwipeListView
@@ -479,13 +479,25 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         animate(view)
                 .translationX(0)
                 .setDuration(animationTime)
-                .setListener(new AnimatorListenerAdapter() {
+                .setListener(new ViewPropertyAnimatorListener() {
                     @Override
-                    public void onAnimationEnd(Animator animation) {
+                    public void onAnimationStart(View view) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View view) {
                         swipeListView.resetScrolling();
                         resetCell();
                     }
+
+                    @Override
+                    public void onAnimationCancel(View view) {
+
+                    }
                 });
+
+
     }
 
     /**
@@ -518,14 +530,24 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 .translationX(moveTo)
                 .alpha(alpha)
                 .setDuration(animationTime)
-                .setListener(new AnimatorListenerAdapter() {
+                .setListener(new ViewPropertyAnimatorListener() {
                     @Override
-                    public void onAnimationEnd(Animator animation) {
+                    public void onAnimationStart(View view) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View view) {
                         if (swap) {
                             closeOpenedItems();
                             performDismiss(view, position, true);
                         }
                         resetCell();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(View view) {
+
                     }
                 });
 
@@ -554,9 +576,14 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         animate(view)
                 .translationX(moveTo)
                 .setDuration(animationTime)
-                .setListener(new AnimatorListenerAdapter() {
+                .setListener(new ViewPropertyAnimatorListener() {
                     @Override
-                    public void onAnimationEnd(Animator animation) {
+                    public void onAnimationStart(View view) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View view) {
                         swipeListView.resetScrolling();
                         if (swap) {
                             boolean aux = !opened.get(position);
@@ -569,6 +596,11 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                             }
                         }
                         resetCell();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(View view) {
+
                     }
                 });
     }
@@ -878,7 +910,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      */
     public void move(float deltaX) {
         swipeListView.onMove(downPosition, deltaX);
-        float posX = ViewHelper.getX(frontView);
+        float posX = getX(frontView);
         if (opened.get(downPosition)) {
             posX += openedRight.get(downPosition) ? -viewWidth + rightOffset : viewWidth - leftOffset;
         }
