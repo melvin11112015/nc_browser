@@ -162,13 +162,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	ECListDialog historyMenuDlg = null;
 	String historyUrl = null;
 	String bookmarkUrl = null;
-	ECListDialog visitorImageDlg = null;
-	ECListDialog imageMenuDlg = null;
-	ECListDialog imageMenuGoodsDlg = null;
-	ECListDialog linkShareMenuDlg = null;
-	ECListDialog imgNewsDlg = null;
-	ECListDialog imageMenuDlgSocial = null;
-	ECListDialog imageMenuDlgMore = null;
+
 	boolean pageLoaded = false;
 	// Layout
 	private DrawerLayout mDrawerLayout;
@@ -422,7 +416,9 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private synchronized void initialize() {
+
 		setContentView(R.layout.activity_browser_main);
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.browser_toolbar);
 		shortcutToolbar = findViewById(R.id.toolbar);
 
@@ -658,6 +654,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 		//mDrawerRight.setVisibility(View.GONE);
 		//mDrawerLeft.setVisibility(View.GONE);
+
 
 	}
 
@@ -2463,9 +2460,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
                     case DialogInterface.BUTTON_NEUTRAL:
                         if (API > 8) {
-                            Utils.downloadFile(mActivity, newUrl,
-									getCurrentWebView().getUserAgent(), "attachment", false);
-                        }
+							//Utils.downloadFile(mActivity, newUrl,getCurrentWebView().getUserAgent(), "attachment", false);
+						}
                         break;
                 }
             }
@@ -3122,8 +3118,7 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 
 					case DialogInterface.BUTTON_NEUTRAL:
 						if (API > 8) {
-							Utils.downloadFile(mActivity, url,
-									getCurrentWebView().getUserAgent(), "attachment", false);
+							//Utils.downloadFile(mActivity, url,getCurrentWebView().getUserAgent(), "attachment", false);
 						}
 						break;
 				}
@@ -3825,7 +3820,8 @@ public class BrowserActivity extends ThemableActivity implements BrowserControll
 			holder.txtTitle.setText(web.getTitle());
 			holder.favicon.setImageBitmap(mWebpageBitmap);
 			if (web.getBitmap() == null) {
-				getImage(holder.favicon, web);
+				//隐藏书签图片
+				//getImage(holder.favicon, web);
 			} else {
 				holder.favicon.setImageBitmap(web.getBitmap());
 			}

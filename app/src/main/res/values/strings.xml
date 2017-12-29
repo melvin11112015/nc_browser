@@ -163,6 +163,7 @@
     </string-array>
 
     <string name="use_i2p_prompt">It looks like you have I2P installed. Do you want toUserId use I2P?</string>
+    <string name="download_complete">下载完成</string>
 
 
     <!-- Content descriptions -->

@@ -56,7 +56,8 @@ public abstract class AppBaseActivity extends FragmentActivity implements
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
 		);
-		mBaseActivity.init(getBaseContext(), this);
+
+        mBaseActivity.init(getBaseContext(), this);
 		onActivityInit();
 		LogUtil.d(TAG, "checktask onCreate:" + super.getClass().getSimpleName()
 				+ "#0x" + super.hashCode() + ", taskid:" + getTaskId()

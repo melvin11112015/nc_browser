@@ -145,8 +145,9 @@ public class PreferenceManager {
     }
 
 	public boolean getHideStatusBarEnabled() {
-		return mPrefs.getBoolean(Name.HIDE_STATUS_BAR, true);
-	}
+        //默认显示状态栏
+        return mPrefs.getBoolean(Name.HIDE_STATUS_BAR, false);
+    }
 
     public void setHideStatusBarEnabled(boolean enable) {
         putBoolean(Name.HIDE_STATUS_BAR, enable);

@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.mlstudio.browser.R;
 import com.mlstudio.browser.constant.Constants;
 import com.mlstudio.browser.database.HistoryItem;
-import com.mlstudio.browser.download.DownloadHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,8 +46,7 @@ public final class Utils {
 	public static void downloadFile(final Activity activity, final String url,
 			final String userAgent, final String contentDisposition, final boolean privateBrowsing) {
 		String fileName = URLUtil.guessFileName(url, null, null);
-		DownloadHandler.onDownloadStart(activity, url, userAgent, contentDisposition, null,
-				privateBrowsing);
+		//DownloadHandler.onDownloadStart(activity, url, userAgent, contentDisposition, null,privateBrowsing);
 		Log.i(Constants.TAG, "Downloading" + fileName);
 	}
 

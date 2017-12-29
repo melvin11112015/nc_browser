@@ -7,7 +7,7 @@
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <!-- All customizations that are NOT specific toUserId a particular API-level can go here. -->
